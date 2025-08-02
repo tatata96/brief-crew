@@ -1,0 +1,37 @@
+// Media query mixins for responsive design
+
+@mixin for-small-screens() {
+  @media (max-width: 768px) {
+    @content;
+  }
+}
+
+@mixin for-medium-screens() {
+  @media (min-width: 769px) and (max-width: 1024px) {
+    @content;
+  }
+}
+
+@mixin for-large-screens() {
+  @media (min-width: 1025px) {
+    @content;
+  }
+}
+
+@mixin for-mobile() {
+  @media (max-width: 480px) {
+    @content;
+  }
+}
+
+@mixin for-tablet() {
+  @media (min-width: 481px) and (max-width: 768px) {
+    @content;
+  }
+}
+
+@mixin for-desktop() {
+  @media (min-width: 769px) {
+    @content;
+  }
+} 

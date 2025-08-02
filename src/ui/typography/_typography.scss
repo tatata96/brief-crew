@@ -1,0 +1,118 @@
+@import "./typography-mixins";
+
+.typography--h0 {
+  @include typography--h0();
+}
+
+.typography--h1 {
+  @include typography--h1();
+}
+
+.typography--h2 {
+  @include typography--h2();
+}
+
+.typography--h3 {
+  @include typography--h3();
+}
+
+.typography--h4 {
+  @include typography--h4();
+}
+
+.typography--h4-mono {
+  @include typography--h4-mono();
+}
+
+.typography--h5 {
+  @include typography--h5();
+}
+
+.typography--h5-medium {
+  @include typography--h5-medium();
+}
+
+.typography--heading-mono {
+  @include typography--heading-mono();
+}
+
+.typography--body {
+  @include typography--body();
+}
+
+.typography--body-semibold {
+  @include typography--body-semibold();
+}
+
+.typography--body-mono {
+  @include typography--body-mono();
+}
+
+.typography--body-small {
+  @include typography--body-small();
+}
+
+.typography--body-large {
+  @include typography--body-large();
+}
+
+.typography--subhead {
+  @include typography--subhead();
+}
+
+.typography--subhead-semibold {
+  @include typography--subhead-semibold();
+}
+
+.typography--subhead-mono {
+  @include typography--subhead-mono();
+}
+
+.typography--paragraph {
+  @include typography--paragraph();
+}
+
+.typography--paragraph-small {
+  @include typography--paragraph-small();
+}
+
+.typography--tagline {
+  @include typography--tagline();
+}
+
+.color--text-main {
+  @include color--text-main();
+}
+
+.color--text-gray {
+  @include color--text-gray();
+}
+
+.color--text-gray-lighter {
+  @include color--text-gray-lighter();
+}
+
+.color--text-link {
+  @include color--text-link();
+}
+
+.color--text-danger {
+  @include color--text-danger();
+}
+
+.is-uppercased-text {
+  text-transform: uppercase;
+}
+
+.is-truncated-text {
+  display: inline-block;
+
+  max-width: 100%;
+
+  overflow: hidden;
+
+  vertical-align: top;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}

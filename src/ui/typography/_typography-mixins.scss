@@ -1,0 +1,231 @@
+@import "../style/media-queries";
+
+:root {
+  --font-family--primary: "Poppins", sans-serif;
+  --font-family--secondary: "Space Grotesk", sans-serif;
+  --font-family--mono: "Anonymous Pro", monospace;
+}
+
+@mixin typography--h0() {
+  @include for-small-screens() {
+    font-size: 36px;
+    line-height: 40px;
+  }
+
+  font-family: var(--font-family--primary);
+  font-size: 90px;
+  font-weight: 600;
+  line-height: 104px;
+  letter-spacing: -0.03em;
+}
+
+@mixin typography--h1() {
+  @include for-small-screens() {
+    font-size: 36px;
+    line-height: 44px;
+  }
+
+  font-family: var(--font-family--primary);
+  font-size: 56px;
+  font-weight: 700;
+  line-height: 68px;
+  letter-spacing: 0;
+}
+
+@mixin typography--h2() {
+  @include for-small-screens() {
+    font-size: 32px;
+    line-height: 40px;
+  }
+
+  font-family: var(--font-family--primary);
+  font-size: 44px;
+  font-weight: 700;
+  line-height: 52px;
+  letter-spacing: 0;
+}
+
+@mixin typography--h3() {
+  @include for-small-screens() {
+    font-size: 28px;
+    line-height: 40px;
+  }
+
+  font-family: var(--font-family--primary);
+  font-size: 35px;
+  font-weight: 600;
+  line-height: 50px;
+  letter-spacing: -0.02em;
+}
+
+@mixin typography--h4() {
+  @include for-small-screens() {
+    font-size: 24px;
+    line-height: 32px;
+  }
+
+  font-family: var(--font-family--primary);
+  font-size: 27px;
+  font-weight: 600;
+  line-height: 32px;
+  letter-spacing: -0.02em;
+}
+
+@mixin typography--h4-mono() {
+  @include for-small-screens() {
+    font-size: 24px;
+  }
+
+  font-family: var(--font-family--mono);
+  font-size: 27px;
+  font-weight: 400;
+  line-height: 32px;
+  letter-spacing: -0.02em;
+}
+
+@mixin typography--h5() {
+  @include for-small-screens() {
+    font-size: 17px;
+    line-height: 28px;
+  }
+
+  font-family: var(--font-family--secondary);
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 28px;
+  letter-spacing: -0.02em;
+}
+
+@mixin typography--h5-medium() {
+  @include for-small-screens() {
+    font-size: 17px;
+    line-height: 28px;
+  }
+
+  font-family: var(--font-family--secondary);
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 28px;
+  letter-spacing: -0.02em;
+}
+
+@mixin typography--heading-mono() {
+  @include for-small-screens() {
+    font-size: 17px;
+    line-height: 28px;
+  }
+
+  font-family: var(--font-family--mono);
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 28px;
+  letter-spacing: -0.02em;
+}
+
+@mixin typography--body() {
+  font-family: var(--font-family--secondary);
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: -0.02em;
+}
+
+@mixin typography--body-semibold() {
+  font-family: var(--font-family--secondary);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 24px;
+  letter-spacing: -0.02em;
+}
+
+@mixin typography--body-mono() {
+  font-family: var(--font-family--mono);
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: -0.02em;
+}
+
+@mixin typography--body-small() {
+  font-family: var(--font-family--secondary);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 28px;
+  letter-spacing: -0.02em;
+}
+
+@mixin typography--body-large() {
+  font-family: var(--font-family--secondary);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 20px;
+  letter-spacing: -0.02em;
+}
+
+@mixin typography--subhead() {
+  font-family: var(--font-family--secondary);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 17px;
+  letter-spacing: -0.02em;
+}
+
+@mixin typography--subhead-semibold() {
+  font-family: var(--font-family--secondary);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 17px;
+  letter-spacing: -0.02em;
+}
+
+@mixin typography--subhead-mono() {
+  font-family: var(--font-family--mono);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 19px;
+  letter-spacing: -0.02em;
+}
+
+@mixin typography--paragraph() {
+  font-family: var(--font-family--secondary);
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 32px;
+  letter-spacing: -0.02em;
+}
+
+@mixin typography--paragraph-small() {
+  font-family: var(--font-family--secondary);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: -0.02em;
+}
+
+@mixin typography--tagline() {
+  font-family: var(--font-family--secondary);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 14px;
+  letter-spacing: -0.02em;
+}
+
+@mixin color--text-main() {
+  color: var(--text-main);
+}
+
+@mixin color--text-gray() {
+  color: var(--text-gray);
+}
+
+@mixin color--text-gray-lighter() {
+  color: var(--text-gray-lighter);
+}
+
+@mixin color--text-link() {
+  color: var(--text-link);
+}
+
+@mixin color--text-danger() {
+  color: var(--text-danger);
+}

@@ -4,6 +4,7 @@ import Landing from './pages/Landing/Landing'
 import About from './pages/About/About'
 import Work from './pages/Work/Work'
 import Crew from './pages/Crew/Crew'
+import TypographyTest from './components/TypographyTest'
 
 function App() {
   const [activeSection, setActiveSection] = useState('landing')
@@ -96,6 +97,11 @@ function App() {
         
         <section id="crew" className="section crew-section">
           <Crew />
+        </section>
+        
+        {/* Typography Test Section */}
+        <section id="typography-test" className="section">
+          <TypographyTest />
         </section>
       </main>
     </div>
