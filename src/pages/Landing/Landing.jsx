@@ -1,11 +1,13 @@
 import React from 'react'
 import './Landing.css'
+import BlobAnimation from './BlobAnimation'
 
 const Landing = () => {
   return (
     <div className="landing-container">
       <div className="landing-content">
         <div className="hero-section">
+          <BlobAnimation />
           <h1 className="hero-title">
             Welcome to <span className="highlight">Brief Crew</span>
           </h1>
@@ -14,8 +16,8 @@ const Landing = () => {
           </p>
           <div className="hero-description">
             <p>
-              Brief Crew is your partner in digital excellence. We combine creativity, 
-              technology, and strategic thinking to deliver exceptional results that drive 
+              Brief Crew is your partner in digital excellence. We combine creativity,
+              technology, and strategic thinking to deliver exceptional results that drive
               your business forward.
             </p>
           </div>
@@ -24,7 +26,7 @@ const Landing = () => {
             <button className="secondary-button">Learn More</button>
           </div>
         </div>
-        
+
         <div className="features-section">
           <div className="feature-grid">
             <div className="feature-item">
@@ -49,4 +51,4 @@ const Landing = () => {
   )
 }
 
-export default Landing 
+export default Landing
