@@ -1,11 +1,15 @@
 import React from 'react'
 import './Landing.css'
-import BlobAnimation from './BlobAnimation'
+import Scene from './Scene'
+
 
 const Landing = () => {
   return (
-    <div className="landing-container">
-      <BlobAnimation />
+    <div className="landing-container" >
+      <div className="landing-container-inner">
+        <Scene />
+      </div>
+
 
     </div>
   )
