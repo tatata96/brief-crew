@@ -5,6 +5,16 @@
   text-align: center;
 }
 
+.about-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  h1 {
+    width: auto;
+  }
+}
+
 .about-content {
   padding: 2rem;
 }

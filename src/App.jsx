@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import './App.css'
+import './App.scss'
 import Landing from './pages/Landing/Landing'
 import About from './pages/About/About'
 import Work from './pages/Work/Work'
@@ -39,11 +39,11 @@ function App() {
       {/* Fixed Header */}
       <header className="header">
         <div className="header-content">
-          <h1 className="logo" onClick={() => scrollToSection('landing')}>
+          <h1 className="typography--dirtyline-display logo" onClick={() => scrollToSection('landing')}>
             BRIEF CREW
           </h1>
           <nav className="navigation">
-            <ul className="nav-menu">
+            <ul className="nav-menu typography--h5">
               <li>
                 <button 
                   className={`nav-item ${activeSection === 'landing' ? 'active' : ''}`}

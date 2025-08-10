@@ -80,6 +80,27 @@
   @include typography--tagline();
 }
 
+// Dirtyline 36days typography classes
+.typography--dirtyline-display {
+  @include typography--dirtyline-display();
+}
+
+.typography--dirtyline-heading {
+  @include typography--dirtyline-heading();
+}
+
+.typography--dirtyline-subheading {
+  @include typography--dirtyline-subheading();
+}
+
+.typography--dirtyline-body {
+  @include typography--dirtyline-body();
+}
+
+.typography--dirtyline-small {
+  @include typography--dirtyline-small();
+}
+
 .color--text-main {
   @include color--text-main();
 }

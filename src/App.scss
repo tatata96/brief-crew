@@ -44,6 +44,7 @@ body {
   color: #333;
   text-decoration: none;
   cursor: pointer;
+  color: var(--black);
   transition: all 0.3s ease;
 }
 
@@ -114,23 +115,21 @@ body {
 }
 
 .landing-section {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  //background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: var(--orange-800);
 }
 
 .about-section {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  color: white;
+  background: linear-gradient(180deg, #ffffff 0%, #fffbe8 100%);
 }
 
 .work-section {
-  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-  color: white;
+  background: linear-gradient(360deg, #ffffff 0%, #fffbe8 100%);
 }
 
 .crew-section {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: linear-gradient(179deg, #ffffff 0%, #a5ddf9 100%);
+
 }
 
 /* Responsive Design */

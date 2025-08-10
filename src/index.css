@@ -1,5 +1,6 @@
 @import "./ui/typography/_fonts.scss";
 @import "./ui/typography/_typography.scss";
+@import "./_colors.scss";
 
 :root {
   font-family: var(--font-family--secondary), system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -15,6 +16,7 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  color: var(--text-color);
 }
 
 a {

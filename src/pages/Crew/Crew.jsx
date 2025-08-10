@@ -29,33 +29,6 @@ const Crew = () => {
       bio: "Strategic marketing professional focused on driving growth through data-driven campaigns.",
       skills: ["Digital Marketing", "SEO", "Analytics", "Content Strategy"],
       experience: "5+ years"
-    },
-    {
-      id: 4,
-      name: "David Thompson",
-      role: "Project Manager",
-      image: "https://via.placeholder.com/200x200/00f2fe/ffffff?text=David",
-      bio: "Experienced project manager ensuring smooth delivery and client satisfaction.",
-      skills: ["Agile", "Scrum", "Client Relations", "Risk Management"],
-      experience: "7+ years"
-    },
-    {
-      id: 5,
-      name: "Lisa Wang",
-      role: "UX Researcher",
-      image: "https://via.placeholder.com/200x200/4facfe/ffffff?text=Lisa",
-      bio: "User experience researcher dedicated to understanding user needs and behaviors.",
-      skills: ["User Research", "Usability Testing", "Data Analysis", "Prototyping"],
-      experience: "4+ years"
-    },
-    {
-      id: 6,
-      name: "Alex Martinez",
-      role: "Frontend Developer",
-      image: "https://via.placeholder.com/200x200/00f2fe/ffffff?text=Alex",
-      bio: "Frontend specialist creating beautiful, responsive, and accessible user interfaces.",
-      skills: ["JavaScript", "CSS", "React", "Accessibility"],
-      experience: "5+ years"
     }
   ]
 
@@ -89,12 +62,7 @@ const Crew = () => {
             </div>
           ))}
         </div>
-        
-        <div className="crew-cta">
-          <h2>Join Our Team</h2>
-          <p>We're always looking for talented individuals to join our crew</p>
-          <button className="join-button">View Open Positions</button>
-        </div>
+      
       </div>
     </div>
   )
