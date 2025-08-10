@@ -39,7 +39,7 @@ function App() {
       {/* Fixed Header */}
       <header className="header">
         <div className="header-content">
-          <h1 className="typography--dirtyline-display logo" onClick={() => scrollToSection('landing')}>
+          <h1 className="typography--tropikal-display logo" onClick={() => scrollToSection('landing')}>
             BRIEF CREW
           </h1>
           <nav className="navigation">

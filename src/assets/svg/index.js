@@ -1,5 +1,9 @@
 
 import nut from "./nut.svg";
+import green from "./green.svg";
+import cloud from "./cloud.svg";
+import ball from "./ball.svg";
+
 /*
 import one from "./amber.svg";
 
@@ -22,9 +26,10 @@ import fifteen from "./yellow.svg";
 */
 
 export default {
-
-
-  nut
+  nut,
+  cloud,
+  ball,
+  green,
   //four,
   //five,
   //six,

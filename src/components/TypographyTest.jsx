@@ -43,6 +43,16 @@ const TypographyTest = () => {
         <p className="typography--dirtyline-small">Small - Dirtyline 36days</p>
       </div>
       
+      {/* Tropikal Typography Examples */}
+      <div style={{ marginTop: '40px', borderTop: '2px solid #ccc', paddingTop: '20px' }}>
+        <h3>Tropikal Typography</h3>
+        <p className="typography--tropikal-display">Display - Tropikal Bold</p>
+        <p className="typography--tropikal-heading">Heading - Tropikal Bold</p>
+        <p className="typography--tropikal-subheading">Subheading - Tropikal Bold</p>
+        <p className="typography--tropikal-body">Body - Tropikal Bold</p>
+        <p className="typography--tropikal-small">Small - Tropikal Bold</p>
+      </div>
+      
       <div style={{ marginTop: '40px' }}>
         <p className="typography--body color--text-main">Main Text Color</p>
         <p className="typography--body color--text-gray">Gray Text Color</p>
