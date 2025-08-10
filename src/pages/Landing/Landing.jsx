@@ -1,13 +1,11 @@
 import React from 'react'
 import './Landing.css'
-import BlobAnimation from './BlobAnimation'
 
 const Landing = () => {
   return (
     <div className="landing-container">
       <div className="landing-content">
         <div className="hero-section">
-          <BlobAnimation />
           <h1 className="hero-title">
             Welcome to <span className="highlight">Brief Crew</span>
           </h1>
