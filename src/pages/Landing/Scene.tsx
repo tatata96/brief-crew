@@ -9,7 +9,9 @@ import Matter, {
   Composite,
   Mouse,
   MouseConstraint,
+  Body,
 } from "matter-js";
+import {createCircle, createArch, renderArch} from "../../ui/utils/createShapes";
 
 export default function Scene() {
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -44,33 +46,67 @@ export default function Scene() {
     const runner = Runner.create();
     Runner.run(runner, engine);
 
-    const R = Math.min(60, width * 0.15, height * 0.15); // Limit radius to fit within screen
-    // 3) first object: a circle
-    const circle = Bodies.circle(width * 0.5, R + 20, R, {
-      restitution: 0.6,
-      friction: 0.2,
-      render: { visible: false }, // hide default draw so we can custom paint
-    });
+    // Store shape metadata separately
+    const shapeData = new Map<Body, { type: string; color: string; size: number; archSide?: string }>();
+
+    const R = Math.min(60, width * 0.15, height * 0.15);
+    const archSize = Math.min(280, width * 0.2, height * 0.2);
+
+    // 3) Create shapes
+    const circle = createCircle(width * 0.5, R + 20, R, false, shapeData);
+    const pinkArch = createArch(width * 0.3, height * 0.6, archSize, '#ff69b4', 'bottom', true, shapeData);
+    const blueArch = createArch(width * 0.7, 50, archSize * 0.8, '#4169e1', 'top', false, shapeData);
+    
+    // Add more circles with varying sizes and colors
+    const smallCircle = createCircle(width * 0.2, 80, R * 0.6, false, shapeData);
+    const largeCircle = createCircle(width * 0.8, height * 0.7, R * 1.4, false, shapeData);
 
     Matter.Events.on(render, 'afterRender', () => {
       const ctx = render.context;
-      const { x, y } = circle.position;
-      const angle = circle.angle;
-    
-      ctx.save();
-      ctx.translate(x, y);
-      ctx.rotate(angle);
-    
-      const gradient = ctx.createRadialGradient(0, 0, R * 0.2, 0, 0, R);
-      gradient.addColorStop(0, '#ff8a00'); // center color
-      gradient.addColorStop(1, '#ff0080'); // edge color
-    
-      ctx.fillStyle = gradient;
-      ctx.beginPath();
-      ctx.arc(0, 0, R, 0, Math.PI * 2);
-      ctx.fill();
-    
-      ctx.restore();
+      
+      // Draw all circles
+      [circle, smallCircle, largeCircle].forEach(circleBody => {
+        const data = shapeData.get(circleBody);
+        if (data?.type === 'circle') {
+          const { x, y } = circleBody.position;
+          const angle = circleBody.angle;
+        
+          ctx.save();
+          ctx.translate(x, y);
+          ctx.rotate(angle);
+        
+          // Create different gradients for each circle
+          let gradient;
+          if (circleBody === circle) {
+            // Original orange to pink gradient
+            gradient = ctx.createRadialGradient(0, 0, data.size * 0.2, 0, 0, data.size);
+            gradient.addColorStop(0, '#ff8a00');
+            gradient.addColorStop(1, '#ff0080');
+          } else if (circleBody === smallCircle) {
+            // Green to blue gradient
+            gradient = ctx.createRadialGradient(0, 0, data.size * 0.2, 0, 0, data.size);
+            gradient.addColorStop(0, '#00ff88');
+            gradient.addColorStop(1, '#0088ff');
+          } else {
+            // Purple to yellow gradient
+            gradient = ctx.createRadialGradient(0, 0, data.size * 0.2, 0, 0, data.size);
+            gradient.addColorStop(0, '#8a2be2');
+            gradient.addColorStop(1, '#ffff00');
+          }
+        
+          ctx.fillStyle = gradient;
+          ctx.beginPath();
+          ctx.arc(0, 0, data.size, 0, Math.PI * 2);
+          ctx.fill();
+        
+          ctx.restore();
+        }
+      });
+
+      // Draw arches using the utility function
+      [pinkArch, blueArch].forEach(arch => {
+        renderArch(ctx, arch, shapeData);
+      });
     });
 
     // 4) boundaries to keep shapes within the world
@@ -97,7 +133,7 @@ export default function Scene() {
       render: { fillStyle: "#e8e8e8", },
     });
 
-    Composite.add(world, [circle, floor, leftWall, rightWall, ceiling]);
+    Composite.add(world, [circle, pinkArch, blueArch, smallCircle, largeCircle, floor, leftWall, rightWall, ceiling]);
 
     // 5) basic interactivity (drag with mouse/touch)
   // 5) interactivity (drag) — but don't swallow page scroll
