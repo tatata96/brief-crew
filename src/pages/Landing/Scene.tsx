@@ -35,6 +35,7 @@ export default function Scene() {
         background: "transparent",
         wireframes: false,
         pixelRatio: window.devicePixelRatio,
+      
       },
     });
     Render.run(render);
@@ -43,20 +44,60 @@ export default function Scene() {
     const runner = Runner.create();
     Runner.run(runner, engine);
 
+    const R = Math.min(60, width * 0.15, height * 0.15); // Limit radius to fit within screen
     // 3) first object: a circle
-    const circle = Bodies.circle(width * 0.5, 60, 60, {
+    const circle = Bodies.circle(width * 0.5, R + 20, R, {
       restitution: 0.6,
       friction: 0.2,
-      render: { fillStyle: "#ff8a00" },
+      render: { visible: false }, // hide default draw so we can custom paint
     });
 
-    // 4) a floor so it can land
+    Matter.Events.on(render, 'afterRender', () => {
+      const ctx = render.context;
+      const { x, y } = circle.position;
+      const angle = circle.angle;
+    
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(angle);
+    
+      const gradient = ctx.createRadialGradient(0, 0, R * 0.2, 0, 0, R);
+      gradient.addColorStop(0, '#ff8a00'); // center color
+      gradient.addColorStop(1, '#ff0080'); // edge color
+    
+      ctx.fillStyle = gradient;
+      ctx.beginPath();
+      ctx.arc(0, 0, R, 0, Math.PI * 2);
+      ctx.fill();
+    
+      ctx.restore();
+    });
+
+    // 4) boundaries to keep shapes within the world
     const floor = Bodies.rectangle(width / 2, height - 20, width, 40, {
       isStatic: true,
       render: { fillStyle: "#e8e8e8", },
     });
+    
+    // Left wall - positioned exactly at left edge of screen
+    const leftWall = Bodies.rectangle(20, height / 2, 40, height, {
+      isStatic: true,
+      render: { fillStyle: "#e8e8e8", },
+    });
+    
+    // Right wall - positioned exactly at right edge of screen
+    const rightWall = Bodies.rectangle(width - 20, height / 2, 40, height, {
+      isStatic: true,
+      render: { fillStyle: "#e8e8e8", },
+    });
+    
+    // Ceiling - positioned at top edge to prevent shapes from going above screen
+    const ceiling = Bodies.rectangle(width / 2, 20, width, 40, {
+      isStatic: true,
+      render: { fillStyle: "#e8e8e8", },
+    });
 
-    Composite.add(world, [circle, floor]);
+    Composite.add(world, [circle, floor, leftWall, rightWall, ceiling]);
 
     // 5) basic interactivity (drag with mouse/touch)
   // 5) interactivity (drag) — but don't swallow page scroll
