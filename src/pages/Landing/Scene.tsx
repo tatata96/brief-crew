@@ -11,7 +11,7 @@ import Matter, {
   MouseConstraint,
   Body,
 } from "matter-js";
-import {createCircle, createArch, renderArch, createRectangleWithInnerCircles, renderRectangleWithInnerCircles, createStar, renderStar} from "../../ui/utils/createShapes";
+import {createCircle, createArch, renderArch, createRectangleWithInnerCircles, renderRectangleWithInnerCircles, createStar, renderStar, createEye, renderEye} from "../../ui/utils/createShapes";
 
 export default function Scene() {
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -21,7 +21,8 @@ export default function Scene() {
 
     // sizes
     const width = containerRef.current.clientWidth || window.innerWidth;
-    const height = containerRef.current.clientHeight || window.innerHeight;
+    // MİNUS HEADER HEİGHT
+    const height = containerRef.current.clientHeight || window.innerHeight - 80;
 
     // 1) engine & world
     const engine = Engine.create({gravity: {x: 0, y: 1}});
@@ -92,6 +93,15 @@ export default function Scene() {
 
     const sun = createStar(420, 260, 16, 90, 45, "#FF8A00", false, shapeData);
     const star = createStar(200, 140, 8, 40, 18, "#FFD24A", true, shapeData);
+    const sun2 = createStar(720, 560, 16, 90, 45, "#FF8A00", false, shapeData);
+    const sun3 = createStar(950, 360, 16, 90, 45, "yellow", false, shapeData);
+
+
+    // Neutral eye, centered gaze
+const eye1 = createEye(300, 260, 180, 180, "white", "#2AA7FF", "#111", 1, 0, 0, 0.38, 0.45, "white", 3, false, shapeData);
+
+// Looking up-left, slightly squinted
+const eye2 = createEye(520, 260, 160, 70, "#FFF", "#66C08E", "#000", 0.6, -0.7, -0.4, 0.35, 0.5, null, 0, true, shapeData);
 
     
     Matter.Events.on(render, 'afterRender', () => {
@@ -161,6 +171,11 @@ export default function Scene() {
 
       renderStar(ctx, sun, shapeData);
       renderStar(ctx, star, shapeData);
+      renderStar(ctx, sun2, shapeData);
+      renderStar(ctx, sun3, shapeData);
+
+      renderEye(ctx, eye1, shapeData);
+      renderEye(ctx, eye2, shapeData);
     });
 
     // 4) boundaries to keep shapes within the world
@@ -187,7 +202,7 @@ export default function Scene() {
       render: {fillStyle: "#e8e8e8", },
     });
 
-    Composite.add(world, [circle, pinkArch, blueArch, smallCircle, largeCircle, halfCircle1, halfCircle2, halfCircle3, yellowWithDots, floor, leftWall, rightWall, ceiling,blueWithDots, sun, star]);
+    Composite.add(world, [circle, pinkArch, blueArch, smallCircle, largeCircle, halfCircle1, halfCircle2, halfCircle3, yellowWithDots, floor, leftWall, rightWall, ceiling,blueWithDots, sun, star, eye1, eye2]);
 
     // 5) basic interactivity (drag with mouse/touch)
     // 5) interactivity (drag) — but don't swallow page scroll

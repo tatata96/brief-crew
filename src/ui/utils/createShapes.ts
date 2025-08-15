@@ -275,3 +275,138 @@ function starPoints(
   }
   return points;
 }
+
+/**
+ * Eye with almond outer shape, iris & pupil.
+ * - open: 0..1 (blink amount; 1 = fully open)
+ * - gazeX/Y: -1..1 (look left/right & up/down)
+ * - irisRatio: iris radius vs min(width,height)
+ * - pupilRatio: pupil radius vs iris radius
+ */
+export const createEye = (
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  scleraColor: string = "#FFFFFF",
+  irisColor: string = "#3AA0FF",
+  pupilColor: string = "#000000",
+  open: number = 1,
+  gazeX: number = 0,
+  gazeY: number = 0,
+  irisRatio: number = 0.36,
+  pupilRatio: number = 0.45,
+  outlineColor: string | null = null,
+  outlineWidth: number = 2,
+  isStatic: boolean = false,
+  shapeData: any
+) => {
+  const body = Bodies.rectangle(x, y, width, height, {
+    restitution: 0.6,
+    friction: 0.2,
+    isStatic,
+    render: { visible: false },
+  });
+
+  shapeData.set(body, {
+    type: "eye",
+    width,
+    height,
+    scleraColor,
+    irisColor,
+    pupilColor,
+    open: Math.max(0, Math.min(1, open)),
+    gazeX: Math.max(-1, Math.min(1, gazeX)),
+    gazeY: Math.max(-1, Math.min(1, gazeY)),
+    irisRatio,
+    pupilRatio,
+    outlineColor,
+    outlineWidth,
+  });
+
+  return body;
+};
+
+export const renderEye = (
+  ctx: CanvasRenderingContext2D,
+  body: Body,
+  shapeData: any
+) => {
+  const data = shapeData.get(body);
+  if (!data || data.type !== "eye") return;
+
+  const {
+    width: w,
+    height: H,
+    scleraColor,
+    irisColor,
+    pupilColor,
+    open,
+    gazeX,
+    gazeY,
+    irisRatio,
+    pupilRatio,
+    outlineColor,
+    outlineWidth,
+  } = data;
+
+  const { x, y } = body.position;
+
+  // Effective height (blink)
+  const h = Math.max(1, H * Math.max(0.02, open)); // never fully 0 to keep a hairline
+
+  // Geometry helpers
+  const minWH = Math.min(w, h);
+  const irisR = minWH * Math.max(0.05, irisRatio);
+  const pupilR = irisR * Math.max(0.1, Math.min(0.95, pupilRatio));
+
+  // Constrain gaze so iris stays inside the eye
+  const xLimit = (w / 2) - (irisR + 4);
+  const yLimit = (h / 2) - (irisR + 4);
+  const ix = Math.max(-xLimit, Math.min(xLimit, gazeX * xLimit * 0.8));
+  const iy = Math.max(-yLimit, Math.min(yLimit, gazeY * yLimit * 0.8));
+
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(body.angle);
+
+  // ---- Outer almond (sclera) ----
+  ctx.beginPath();
+  ctx.moveTo(-w / 2, 0);
+  ctx.quadraticCurveTo(0, -h / 2, w / 2, 0);  // top lid
+  ctx.quadraticCurveTo(0, h / 2, -w / 2, 0);  // bottom lid
+  ctx.closePath();
+  ctx.fillStyle = scleraColor;
+  ctx.fill();
+
+  if (outlineColor) {
+    ctx.lineWidth = outlineWidth;
+    ctx.strokeStyle = outlineColor;
+    ctx.stroke();
+  }
+
+  // Clip iris/pupil to eye shape so they don't bleed outside when blinking
+  ctx.save();
+  ctx.clip();
+
+  // ---- Iris ----
+  ctx.beginPath();
+  ctx.arc(ix, iy, irisR, 0, Math.PI * 2);
+  ctx.fillStyle = irisColor;
+  ctx.fill();
+
+  // ---- Pupil ----
+  ctx.beginPath();
+  ctx.arc(ix, iy, pupilR, 0, Math.PI * 2);
+  ctx.fillStyle = pupilColor;
+  ctx.fill();
+
+  // ---- Small highlight ----
+  ctx.beginPath();
+  ctx.arc(ix - pupilR * 0.4, iy - pupilR * 0.4, Math.max(1, pupilR * 0.25), 0, Math.PI * 2);
+  ctx.fillStyle = "rgba(255,255,255,0.85)";
+  ctx.fill();
+
+  ctx.restore(); // end clip
+  ctx.restore();
+};
