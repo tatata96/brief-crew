@@ -11,7 +11,7 @@ import Matter, {
   MouseConstraint,
   Body,
 } from "matter-js";
-import {createCircle, createArch, renderArch, createRectangleWithInnerCircles, renderRectangleWithInnerCircles, createStar, renderStar, createEye, renderEye, createMartiniGlass, renderMartiniGlass, createOliveStick, renderOliveStick} from "../../ui/utils/createShapes";
+import {createCircle, createArch, renderArch, createRectangleWithInnerCircles, renderRectangleWithInnerCircles, createStar, renderStar, createEye, renderEye, createMartiniGlass, renderMartiniGlass, createOliveStick, renderOliveStick, createCameraFront, renderCameraFront} from "../../ui/utils/createShapes";
 
 export default function Scene() {
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -55,8 +55,7 @@ export default function Scene() {
 
     // 3) Create shapes
     const circle = createCircle(width * 0.5, R + 20, R, false, shapeData, false, '#ff8a00');
-    const pinkArch = createArch(width * 0.3, height * 0.6, archSize, '#ff69b4', 'bottom', true, shapeData);
-    const blueArch = createArch(width * 0.7, 50, archSize * 0.8, '#4169e1', 'top', false, shapeData);
+
 
     // Add more circles with varying sizes and colors
     const smallCircle = createCircle(width * 0.2, 80, R * 0.6, false, shapeData, false, '#00ff88');
@@ -86,8 +85,8 @@ export default function Scene() {
 
 
     const glass = createMartiniGlass(
-      400, 300,              // x, y
-      260,                   // overall height
+      500, 400,              // x, y
+      360,                   // overall height
       { bowlColor: "#FF4E1A", stemColor: "#FF4E1A", baseColor: "#FF4E1A", outlineColor: null },
       false,                 // isStatic
       shapeData
@@ -99,6 +98,22 @@ export default function Scene() {
       stickMargin: 120, 
       spacing: 150,  
     }, false, shapeData);
+
+
+    const cam = createCameraFront(
+      420, 280,       // x, y
+      360, 210,       // width, height
+      {
+        bodyColor: "#E65B49",
+        topColor: "#79B6B7",
+        lensRingColors: ["#F2D2A0", "#1E6D86", "#0F3F50", "#082B35"],
+        labelText: "FT",
+      },
+      false,
+      shapeData
+    );
+
+    
     Matter.Events.on(render, 'afterRender', () => {
       const ctx = render.context;
 
@@ -151,9 +166,6 @@ export default function Scene() {
       });
 
       // Draw arches using the utility function
-      [pinkArch, blueArch].forEach(arch => {
-        renderArch(ctx, arch, shapeData);
-      });
 
       // Draw the yellow rectangle with dots
       renderRectangleWithInnerCircles(ctx, yellowWithDots, shapeData);
@@ -168,6 +180,9 @@ export default function Scene() {
       renderMartiniGlass(ctx, glass, shapeData);
 
       renderOliveStick(ctx, skewer, shapeData,);
+
+      renderCameraFront(ctx, cam, shapeData);
+
 
 
     });
@@ -196,7 +211,7 @@ export default function Scene() {
       render: {fillStyle: "#e8e8e8", },
     });
 
-    Composite.add(world, [circle, pinkArch, blueArch, smallCircle, halfCircle1,  yellowWithDots, floor, leftWall, rightWall, ceiling, sun, star,  glass, skewer]);
+    Composite.add(world, [circle, smallCircle, halfCircle1,  yellowWithDots, floor, leftWall, rightWall, ceiling, sun, star,  glass, skewer, cam]);
 
     // 5) basic interactivity (drag with mouse/touch)
     // 5) interactivity (drag) — but don't swallow page scroll

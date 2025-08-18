@@ -754,3 +754,216 @@ export const renderOliveStick = (
 
   ctx.restore();
 };
+
+
+type CameraFrontOpts = {
+  bodyColor?: string;        // main body
+  bodySecondary?: string;    // side panels
+  topColor?: string;         // pentaprism/top
+  trimColor?: string;        // thin bars
+  outlineColor?: string | null;
+  outlineWidth?: number;
+
+  lensRingColors?: string[]; // outer→inner rings
+  glassOuter?: string;       // lens glass outer
+  glassInner?: string;       // lens glass inner
+  labelText?: string;        // e.g., "FT"
+};
+
+/** Create a front-view camera */
+export const createCameraFront = (
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  opts: CameraFrontOpts = {},
+  isStatic: boolean = false,
+  shapeData: any
+) => {
+  const {
+    bodyColor = "#E05A47",
+    bodySecondary = "#2F9EA0",
+    topColor = "#78B5B6",
+    trimColor = "#0E4B5B",
+    outlineColor = "#0E4B5B",
+    outlineWidth = 2,
+    lensRingColors = ["#F2D2A0", "#1E6D86", "#0F3F50", "#082B35"],
+    glassOuter = "#1C6D80",
+    glassInner = "#001A22",
+    labelText = "FT",
+  } = opts;
+
+  const common = { restitution: 0.6, friction: 0.2, isStatic, render: { visible: false } };
+
+  // Basic geometry (proportional)
+  const w = width;
+  const h = height;
+  const lensR = Math.min(h * 0.42, w * 0.33);
+
+  // Physics: simple parts (rect body + lens circle)
+  const bodyRect = Bodies.rectangle(x, y, w, h, common);
+  const lens = Bodies.circle(x + w * 0.18, y, lensR * 0.85, common); // slight protrusion
+
+  const camera = Body.create({ parts: [bodyRect, lens], ...common });
+  Body.setPosition(camera, Vector.create(x, y));
+
+  // Store render metadata on the compound
+  shapeData.set(camera, {
+    type: "cameraFront",
+    w,
+    h,
+    lensR,
+    colors: {
+      bodyColor, bodySecondary, topColor, trimColor,
+      outlineColor, outlineWidth, lensRingColors, glassOuter, glassInner,
+    },
+    labelText,
+  });
+
+  return camera;
+};
+
+/** Renderer */
+export const renderCameraFront = (
+  ctx: CanvasRenderingContext2D,
+  body: Body,
+  shapeData: any
+) => {
+  const data = shapeData.get(body);
+  if (!data || data.type !== "cameraFront") return;
+
+  const { w, h, lensR, colors, labelText } = data as any;
+  const {
+    bodyColor, bodySecondary, topColor, trimColor,
+    outlineColor, outlineWidth, lensRingColors,
+    glassOuter, glassInner,
+  } = colors;
+
+  const { x, y } = body.position;
+
+  // helpers
+  const rr = (rx: number, ry: number, rw: number, rh: number, r: number) => {
+    const rad = Math.min(r, rw / 2, rh / 2);
+    ctx.beginPath();
+    ctx.moveTo(rx + rad, ry);
+    ctx.lineTo(rx + rw - rad, ry);
+    ctx.quadraticCurveTo(rx + rw, ry, rx + rw, ry + rad);
+    ctx.lineTo(rx + rw, ry + rh - rad);
+    ctx.quadraticCurveTo(rx + rw, ry + rh, rx + rw - rad, ry + rh);
+    ctx.lineTo(rx + rad, ry + rh);
+    ctx.quadraticCurveTo(rx, ry + rh, rx, ry + rh - rad);
+    ctx.lineTo(rx, ry + rad);
+    ctx.quadraticCurveTo(rx, ry, rx + rad, ry);
+    ctx.closePath();
+  };
+
+  const drawRing = (cx: number, cy: number, rOuter: number, rInner: number, fill: string) => {
+    ctx.beginPath();
+    ctx.arc(cx, cy, rOuter, 0, Math.PI * 2);
+    ctx.arc(cx, cy, rInner, 0, Math.PI * 2, true);
+    ctx.closePath();
+    ctx.fillStyle = fill;
+    ctx.fill();
+  };
+
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(body.angle);
+
+  // ---- Main body ----
+  const bodyW = w;
+  const bodyH = h;
+  rr(-bodyW / 2, -bodyH / 2, bodyW, bodyH, Math.min(w, h) * 0.06);
+  ctx.fillStyle = bodyColor;
+  ctx.fill();
+
+  // Side panels (secondary color)
+  const sideW = bodyW * 0.18;
+  rr(-bodyW / 2, -bodyH / 2, sideW, bodyH, 10);
+  ctx.fillStyle = bodySecondary; ctx.fill();
+  rr(bodyW / 2 - sideW, -bodyH / 2, sideW, bodyH, 10);
+  ctx.fill();
+
+  // Thin trims
+  ctx.fillStyle = trimColor;
+  ctx.fillRect(-bodyW / 2, -bodyH / 2 + bodyH * 0.14, bodyW, Math.max(2, bodyH * 0.02));
+  ctx.fillRect(-bodyW / 2,  bodyH / 2 - bodyH * 0.12, bodyW, Math.max(2, bodyH * 0.02));
+
+  // ---- Top pentaprism (trapezoid) ----
+  const topH = bodyH * 0.28;
+  const topW = bodyW * 0.58;
+  ctx.beginPath();
+  ctx.moveTo(-topW / 2, -bodyH / 2);
+  ctx.lineTo( topW / 2,  -bodyH / 2);
+  ctx.lineTo( topW * 0.38, -bodyH / 2 - topH);
+  ctx.lineTo(-topW * 0.38, -bodyH / 2 - topH);
+  ctx.closePath();
+  ctx.fillStyle = topColor; ctx.fill();
+
+  // Small hot shoe block
+  rr(-topW * 0.12, -bodyH / 2 - topH, topW * 0.24, topH * 0.22, 4);
+  ctx.fillStyle = trimColor; ctx.fill();
+
+  // ---- Lens (center-right) ----
+  const cx = bodyW * 0.18; // shift right a bit for style
+  const cy = 0;
+
+  // Rings
+  const ringCount = Math.max(3, lensRingColors.length);
+  const ringStep = lensR / (ringCount + 1);
+  for (let i = 0; i < ringCount; i++) {
+    const ro = lensR - i * ringStep;
+    const ri = ro - Math.max(4, ringStep * 0.55);
+    drawRing(cx, cy, ro, ri, lensRingColors[i % lensRingColors.length]);
+  }
+
+  // Glass gradient
+  const grad = ctx.createRadialGradient(cx - lensR * 0.25, cy - lensR * 0.25, lensR * 0.1, cx, cy, lensR * 0.7);
+  grad.addColorStop(0, glassInner);
+  grad.addColorStop(1, glassOuter);
+  ctx.beginPath();
+  ctx.arc(cx, cy, lensR * 0.72, 0, Math.PI * 2);
+  ctx.fillStyle = grad; ctx.fill();
+
+  // Small inner highlight
+  ctx.beginPath();
+  ctx.arc(cx - lensR * 0.22, cy - lensR * 0.22, lensR * 0.12, 0, Math.PI * 2);
+  ctx.fillStyle = "rgba(255,255,255,0.65)"; ctx.fill();
+
+  // ---- Details (buttons/lugs) ----
+  // Shutter button (top right)
+  rr(bodyW * 0.31, -bodyH / 2 - topH * 0.28, bodyW * 0.06, bodyH * 0.08, 4);
+  ctx.fillStyle = bodySecondary; ctx.fill();
+
+  // Strap lugs
+  ctx.beginPath();
+  ctx.arc(-bodyW / 2 + 8, -bodyH * 0.06, 6, 0, Math.PI * 2);
+  ctx.arc(bodyW / 2 - 8, -bodyH * 0.06, 6, 0, Math.PI * 2);
+  ctx.fillStyle = trimColor; ctx.fill();
+
+  // Label
+  ctx.fillStyle = "#F6E9D5";
+  ctx.font = `${Math.max(10, bodyH * 0.16)}px sans-serif`;
+  ctx.textAlign = "left"; ctx.textBaseline = "middle";
+  ctx.fillText(labelText, -bodyW * 0.33, -bodyH * 0.05);
+
+  // Outline
+  if (outlineColor) {
+    ctx.lineWidth = outlineWidth;
+    ctx.strokeStyle = outlineColor;
+    rr(-bodyW / 2, -bodyH / 2, bodyW, bodyH, Math.min(w, h) * 0.06);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(-topW / 2, -bodyH / 2);
+    ctx.lineTo( topW / 2,  -bodyH / 2);
+    ctx.lineTo( topW * 0.38, -bodyH / 2 - topH);
+    ctx.lineTo(-topW * 0.38, -bodyH / 2 - topH);
+    ctx.closePath();
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(cx, cy, lensR, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+
+  ctx.restore();
+};
