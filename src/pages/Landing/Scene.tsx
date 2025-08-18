@@ -11,10 +11,22 @@ import Matter, {
   MouseConstraint,
   Body,
 } from "matter-js";
-import {createCircle, createArch, renderArch, createRectangleWithInnerCircles, renderRectangleWithInnerCircles, createStar, renderStar, createEye, renderEye, createMartiniGlass, renderMartiniGlass, createOliveStick, renderOliveStick, createCameraFront, renderCameraFront} from "../../ui/utils/createShapes";
+import {createCircle, createArch, renderArch, createRectangleWithInnerCircles, renderRectangleWithInnerCircles, createStar, renderStar, createEye, renderEye, createMartiniGlass, renderMartiniGlass, createOliveStick, renderOliveStick, createCameraFront, renderCameraFront, createExclamationMark, renderExclamationMark, createSparkStar, renderSparkStar} from "../../ui/utils/createShapes";
 
 export default function Scene() {
   const containerRef = useRef<HTMLDivElement | null>(null);
+
+  // Color palette - 8 cohesive colors
+  const colors = {
+    primary:  "#C7D2FE", // pastel indigo
+    secondary:"#A7F3D0", // pastel emerald (mint)
+    accent:   "#FDE68A", // pastel amber
+    warm:     "#FECACA", // pastel red (rose)
+    cool:     "#A5F3FC", // pastel cyan
+    neutral:  "#E5E7EB", // pastel gray
+    light:    "#F9FAFB", // near-white
+    dark:     "#94A3B8", // soft slate (muted “dark”)
+  };
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -54,40 +66,35 @@ export default function Scene() {
     const archSize = Math.min(280, width * 0.2, height * 0.2);
 
     // 3) Create shapes
-    const circle = createCircle(width * 0.5, R + 20, R, false, shapeData, false, '#ff8a00');
-
+    const circle = createCircle(width * 0.5, R + 20, R, false, shapeData, false, colors.accent);
 
     // Add more circles with varying sizes and colors
-    const smallCircle = createCircle(width * 0.2, 80, R * 0.6, false, shapeData, false, '#00ff88');
+    const smallCircle = createCircle(width * 0.2, 80, R * 0.6, false, shapeData, false, colors.secondary);
 
     // Add half circles
-    const halfCircle1 = createCircle(width, height, R * 0.8, false, shapeData, true, '#FF6B6B');
-
+    const halfCircle1 = createCircle(width, height, R * 0.8, false, shapeData, true, colors.warm);
 
     const yellowWithDots = createRectangleWithInnerCircles(
       300, 500,           // x, y
       220, 70,            // width, height
       6,                  // circleCount
       8,                  // padding (outer + between circles)
-      "#FFC94A",          // rectColor (yellow)
-      "#000000",          // circleColors (black)
+      colors.accent,      // rectColor (amber)
+      colors.dark,        // circleColors (dark gray)
       "bottom",           // align
       false,              // isStatic
       shapeData
     );
 
-
-    const sun = createStar(420, 260, 16, 90, 45, "#FF8A00", false, shapeData);
-    const star = createStar(200, 140, 8, 40, 18, "#FFD24A", true, shapeData);
-    const sun2 = createStar(720, 560, 16, 90, 45, "#FF8A00", false, shapeData);
-    const sun3 = createStar(950, 360, 16, 90, 45, "yellow", false, shapeData);
-
-
+    const sun = createStar(420, 260, 16, 90, 45, colors.accent, false, shapeData);
+    const star = createStar(200, 140, 8, 40, 18, colors.primary, true, shapeData);
+    const sun2 = createStar(720, 560, 16, 90, 45, colors.accent, false, shapeData);
+    const sun3 = createStar(950, 360, 16, 90, 45, colors.accent, false, shapeData);
 
     const glass = createMartiniGlass(
       500, 400,              // x, y
-      360,                   // overall height
-      { bowlColor: "#FF4E1A", stemColor: "#FF4E1A", baseColor: "#FF4E1A", outlineColor: null },
+      460,                   // overall height
+      { bowlColor: colors.warm, stemColor: colors.warm, baseColor: colors.warm, outlineColor: null },
       false,                 // isStatic
       shapeData
     );
@@ -96,24 +103,48 @@ export default function Scene() {
       count: 3,
       oliveR: 62,
       stickMargin: 120, 
-      spacing: 150,  
+      spacing: 150,
+      oliveColor: colors.secondary,
+      pimentoColor: colors.warm,
+      rodColor: colors.neutral,
+      ballColor: colors.neutral,
     }, false, shapeData);
-
 
     const cam = createCameraFront(
       420, 280,       // x, y
       360, 210,       // width, height
       {
-        bodyColor: "#E65B49",
-        topColor: "#79B6B7",
-        lensRingColors: ["#F2D2A0", "#1E6D86", "#0F3F50", "#082B35"],
+        bodyColor: colors.warm,
+        topColor: colors.cool,
+        lensRingColors: [colors.light, colors.neutral, colors.dark, colors.dark],
         labelText: "FT",
       },
       false,
       shapeData
     );
 
-    
+    const bang = createExclamationMark(
+      300, 200,         // x, y
+      280,              // total height
+      { color:  colors.neutral, angleRad: -0.1 },  // options
+      false,
+      shapeData
+    );
+
+    const spark = createSparkStar(
+      400, 280,            // x, y
+      180, 220,            // width, height (controls long/skinny look)
+      {
+        color: "#FF4E1A",
+        innerRatio: 0.18,      // sharper pinch
+        curveMix: 0.6,
+        curveAngle: Math.PI/10,// ~18°
+        rotationRad: 0,        // rotate if you want
+      },
+      false,
+      shapeData
+    );
+
     Matter.Events.on(render, 'afterRender', () => {
       const ctx = render.context;
 
@@ -128,18 +159,18 @@ export default function Scene() {
           ctx.translate(x, y);
           ctx.rotate(angle);
 
-          // Create different gradients for each circle
+          // Create different gradients for each circle using palette colors
           let gradient;
           if (circleBody === circle) {
-            // Original orange to pink gradient
+            // Amber to warm gradient
             gradient = ctx.createRadialGradient(0, 0, data.size * 0.2, 0, 0, data.size);
-            gradient.addColorStop(0, '#ff8a00');
-            gradient.addColorStop(1, '#ff0080');
+            gradient.addColorStop(0, colors.accent);
+            gradient.addColorStop(1, colors.warm);
           } else if (circleBody === smallCircle) {
-            // Green to blue gradient
+            // Secondary to cool gradient
             gradient = ctx.createRadialGradient(0, 0, data.size * 0.2, 0, 0, data.size);
-            gradient.addColorStop(0, '#00ff88');
-            gradient.addColorStop(1, '#0088ff');
+            gradient.addColorStop(0, colors.secondary);
+            gradient.addColorStop(1, colors.cool);
           }  else {
             // Solid color for half circles
             ctx.fillStyle = data.color;
@@ -175,43 +206,43 @@ export default function Scene() {
       renderStar(ctx, sun2, shapeData);
       renderStar(ctx, sun3, shapeData);
 
-
-
       renderMartiniGlass(ctx, glass, shapeData);
 
       renderOliveStick(ctx, skewer, shapeData,);
 
       renderCameraFront(ctx, cam, shapeData);
 
+      renderExclamationMark(ctx, bang, shapeData);
 
+      renderSparkStar(ctx, spark, shapeData);
 
     });
 
     // 4) boundaries to keep shapes within the world
     const floor = Bodies.rectangle(width / 2, height - 20, width, 40, {
       isStatic: true,
-      render: {fillStyle: "#e8e8e8", },
+      render: {fillStyle: colors.light, },
     });
 
     // Left wall - positioned exactly at left edge of screen
     const leftWall = Bodies.rectangle(20, height / 2, 40, height, {
       isStatic: true,
-      render: {fillStyle: "#e8e8e8", },
+      render: {fillStyle: colors.light, },
     });
 
     // Right wall - positioned exactly at right edge of screen
     const rightWall = Bodies.rectangle(width - 20, height / 2, 40, height, {
       isStatic: true,
-      render: {fillStyle: "#e8e8e8", },
+      render: {fillStyle: colors.light, },
     });
 
     // Ceiling - positioned at top edge to prevent shapes from going above screen
     const ceiling = Bodies.rectangle(width / 2, 20, width, 40, {
       isStatic: true,
-      render: {fillStyle: "#e8e8e8", },
+      render: {fillStyle: colors.light, },
     });
 
-    Composite.add(world, [circle, smallCircle, halfCircle1,  yellowWithDots, floor, leftWall, rightWall, ceiling, sun, star,  glass, skewer, cam]);
+    Composite.add(world, [circle, smallCircle, halfCircle1,  yellowWithDots, floor, leftWall, rightWall, ceiling, sun, star,  glass, skewer, cam, bang, spark]);
 
     // 5) basic interactivity (drag with mouse/touch)
     // 5) interactivity (drag) — but don't swallow page scroll

@@ -1,6 +1,6 @@
 import { Bodies, Body, Vector } from "matter-js";
 
-export const createCircle = (x: number, y: number, radius: number, isStatic: boolean = false, shapeData: any, isHalfCircle: boolean = false, color: string = "#87CEEB") => {
+export const createCircle = (x: number, y: number, radius: number, isStatic: boolean = false, shapeData: any, isHalfCircle: boolean = false, color: string) => {
   const body = Bodies.circle(x, y, radius, {
     restitution: 0.6,
     friction: 0.2,
@@ -65,7 +65,6 @@ export const renderArch = (ctx: CanvasRenderingContext2D, arch: Body, shapeData:
   }
 };
 
-
 export const createRectangleWithInnerCircles = (
   x: number,
   y: number,
@@ -73,8 +72,8 @@ export const createRectangleWithInnerCircles = (
   height: number,
   circleCount: number = 1,
   padding: number = 8,
-  rectColor: string = "#F7C500",          // default: yellow
-  circleColors: string | string[] = "#000",// default: black
+  rectColor: string,
+  circleColors: string | string[],
   align: "top" | "center" | "bottom" = "center",
   isStatic: boolean = false,
   shapeData: any
@@ -178,7 +177,6 @@ export const renderRectangleWithInnerCircles = (
   ctx.restore();
 };
 
-
 /**
  * Create a concave star body (uses fromVertices).
  * edges  = number of star points (≥3)
@@ -191,7 +189,7 @@ export const createStar = (
   edges: number,
   outerR: number,
   innerR: number = outerR * 0.45,
-  color: string = "#FFA24A",
+  color: string,
   isStatic: boolean = false,
   shapeData: any
 ) => {
@@ -288,9 +286,9 @@ export const createEye = (
   y: number,
   width: number,
   height: number,
-  scleraColor: string = "#FFFFFF",
-  irisColor: string = "#3AA0FF",
-  pupilColor: string = "#000000",
+  scleraColor: string,
+  irisColor: string,
+  pupilColor: string,
   open: number = 1,
   gazeX: number = 0,
   gazeY: number = 0,
@@ -411,7 +409,6 @@ export const renderEye = (
   ctx.restore();
 };
 
-
 /**
  * Create a martini glass (inverted triangle bowl, straight stem, flat base).
  *
@@ -436,7 +433,7 @@ export const createMartiniGlass = (
   shapeData: any
 ) => {
   // Default look (inspired by the invite): solid orange glass
-  const bowlColor   = options.bowlColor   ?? "#F24E1E";
+  const bowlColor   = options.bowlColor   ?? "#6366F1";
   const stemColor   = options.stemColor   ?? bowlColor;
   const baseColor   = options.baseColor   ?? bowlColor;
   const outlineColor = options.outlineColor ?? null;
@@ -621,10 +618,10 @@ export const createOliveStick = (
     ballR = Math.round(oliveR * 0.35),
     angleRad = 0,
 
-    oliveColor = "#B8E866",
-    pimentoColor = "#FF3B2F",
-    rodColor = "#BFC6CF",
-    ballColor = "#BFC6CF",
+    oliveColor = "#10B981",
+    pimentoColor = "#EF4444",
+    rodColor = "#6B7280",
+    ballColor = "#6B7280",
     outlineColor = null,
     outlineWidth = 1.5,
     pimentoSide = "right",
@@ -755,7 +752,6 @@ export const renderOliveStick = (
   ctx.restore();
 };
 
-
 type CameraFrontOpts = {
   bodyColor?: string;        // main body
   bodySecondary?: string;    // side panels
@@ -781,15 +777,15 @@ export const createCameraFront = (
   shapeData: any
 ) => {
   const {
-    bodyColor = "#E05A47",
-    bodySecondary = "#2F9EA0",
-    topColor = "#78B5B6",
-    trimColor = "#0E4B5B",
-    outlineColor = "#0E4B5B",
+    bodyColor = "#EF4444",
+    bodySecondary = "#06B6D4",
+    topColor = "#06B6D4",
+    trimColor = "red",
+    outlineColor = "white",
     outlineWidth = 2,
-    lensRingColors = ["#F2D2A0", "#1E6D86", "#0F3F50", "#082B35"],
-    glassOuter = "#1C6D80",
-    glassInner = "#001A22",
+    lensRingColors = ["#F3F4F6", "#6B7280", "#1F2937", "#1F2937"],
+    glassOuter = "#06B6D4",
+    glassInner = "#1F2937",
     labelText = "FT",
   } = opts;
 
@@ -962,6 +958,282 @@ export const renderCameraFront = (
     ctx.stroke();
     ctx.beginPath();
     ctx.arc(cx, cy, lensR, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+
+  ctx.restore();
+};
+
+type ExclaimOpts = {
+  color?: string;            // fill for bar & dot
+  dotColor?: string | null;  // if null, uses color
+  outlineColor?: string | null;
+  outlineWidth?: number;
+
+  barWidthRatio?: number;    // % of total height (default 0.18)
+  dotRadiusRatio?: number;   // % of total height (default 0.12)
+  gapRatio?: number;         // gap between bar and dot (default 0.08)
+  cornerRadiusRatio?: number;// rounded bar corners (default 0.35 of bar width)
+  angleRad?: number;         // tilt the mark
+};
+
+/** Create an exclamation mark as a compound body. */
+export const createExclamationMark = (
+  x: number,
+  y: number,
+  totalHeight: number,
+  opts: ExclaimOpts = {},
+  isStatic: boolean = false,
+  shapeData: any
+) => {
+  const {
+    color = "#FF3B2F",
+    dotColor = null,
+    outlineColor = null,
+    outlineWidth = 2,
+    barWidthRatio = 0.18,
+    dotRadiusRatio = 0.12,
+    gapRatio = 0.08,
+    cornerRadiusRatio = 0.35,
+    angleRad = 0,
+  } = opts;
+
+  const H = Math.max(12, totalHeight);
+  const barW = Math.max(2, H * barWidthRatio);
+  const dotR = Math.max(2, H * dotRadiusRatio);
+  const gap  = Math.max(1, H * gapRatio);
+
+  // Bar height takes the remaining space
+  const barH = Math.max(4, H - (gap + 2 * dotR));
+
+  // Local coordinates (relative to compound center)
+  const topY = -H / 2;
+  const barCY = topY + barH / 2;
+  const dotCY = H / 2 - dotR;
+
+  const common = { restitution: 0.6, friction: 0.2, isStatic, render: { visible: false } };
+
+  // Physics parts
+  const bar = Bodies.rectangle(x, y + barCY, barW, barH, common);
+  const dot = Bodies.circle(x, y + dotCY, dotR, common);
+
+  // Combine into compound
+  const exclaim = Body.create({ parts: [bar, dot], ...common });
+  Body.setPosition(exclaim, Vector.create(x, y));
+  Body.setAngle(exclaim, angleRad);
+
+  // Store render data on the compound
+  shapeData.set(exclaim, {
+    type: "exclamationMark",
+    H, barW, barH, barCY, dotR, dotCY,
+    cornerRadius: Math.min(barW * cornerRadiusRatio, barW / 2, barH / 2),
+    colors: { color, dotColor: dotColor ?? color, outlineColor, outlineWidth },
+  });
+
+  return exclaim;
+};
+
+/** Canvas renderer for the exclamation mark. */
+export const renderExclamationMark = (
+  ctx: CanvasRenderingContext2D,
+  body: Body,
+  shapeData: any
+) => {
+  const data = shapeData.get(body);
+  if (!data || data.type !== "exclamationMark") return;
+
+  const { H, barW, barH, barCY, dotR, dotCY, cornerRadius, colors } = data as any;
+  const { color, dotColor, outlineColor, outlineWidth } = colors;
+
+  const { x, y } = body.position;
+
+  // helper: rounded rect centered at (cx,cy)
+  const roundRect = (cx: number, cy: number, w: number, h: number, r: number) => {
+    const x0 = cx - w / 2, y0 = cy - h / 2;
+    const rad = Math.min(r, w / 2, h / 2);
+    ctx.beginPath();
+    ctx.moveTo(x0 + rad, y0);
+    ctx.lineTo(x0 + w - rad, y0);
+    ctx.quadraticCurveTo(x0 + w, y0, x0 + w, y0 + rad);
+    ctx.lineTo(x0 + w, y0 + h - rad);
+    ctx.quadraticCurveTo(x0 + w, y0 + h, x0 + w - rad, y0 + h);
+    ctx.lineTo(x0 + rad, y0 + h);
+    ctx.quadraticCurveTo(x0, y0 + h, x0, y0 + h - rad);
+    ctx.lineTo(x0, y0 + rad);
+    ctx.quadraticCurveTo(x0, y0, x0 + rad, y0);
+    ctx.closePath();
+  };
+
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(body.angle);
+
+  // Bar
+  roundRect(0, barCY, barW, barH, cornerRadius);
+  ctx.fillStyle = color;
+  ctx.fill();
+  if (outlineColor) { ctx.strokeStyle = outlineColor; ctx.lineWidth = outlineWidth; ctx.stroke(); }
+
+  // Dot
+  ctx.beginPath();
+  ctx.arc(0, dotCY, dotR, 0, Math.PI * 2);
+  ctx.fillStyle = dotColor;
+  ctx.fill();
+  if (outlineColor) { ctx.beginPath(); ctx.arc(0, dotCY, dotR, 0, Math.PI * 2); ctx.strokeStyle = outlineColor; ctx.lineWidth = outlineWidth; ctx.stroke(); }
+
+  ctx.restore();
+};
+
+type SparkStarOpts = {
+  color?: string;
+  outlineColor?: string | null;
+  outlineWidth?: number;
+
+  /** 0..1: radius of the “valley” vs outer tip (smaller = sharper pinch) */
+  innerRatio?: number;       // default 0.22
+  /** 0..1: how much control points lerp toward inner vs outer (curve tightness) */
+  curveMix?: number;         // default 0.55
+  /** radians: how far control points are offset from anchors (≈ 10–25° works) */
+  curveAngle?: number;       // default Math.PI / 9
+  /** samples per quadrant for physics polygon (higher = smoother) */
+  samplesPerQuarter?: number;// default 12
+  rotationRad?: number;      // default 0
+};
+
+/** Create a 4-spike sparkle (like a twinkle). */
+export const createSparkStar = (
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  opts: SparkStarOpts = {},
+  isStatic: boolean = false,
+  shapeData: any
+) => {
+  const {
+    color = "#FF5A1F",
+    outlineColor = null,
+    outlineWidth = 2,
+    innerRatio = 0.22,
+    curveMix = 0.55,
+    curveAngle = Math.PI / 9,        // ~20°
+    samplesPerQuarter = 12,
+    rotationRad = 0,
+  } = opts;
+
+  const common = { restitution: 0.6, friction: 0.2, isStatic, render: { visible: false } };
+
+  // Build a polygon that approximates the curved sparkle for physics.
+  // r(theta) = 1 - (1 - innerRatio) * |sin(2θ)|^p  (p≈1.6 gives a nice pinch)
+  const p = 1.6;
+  const Rx = width / 2, Ry = height / 2;
+  const steps = Math.max(4 * samplesPerQuarter, 16);
+  const pts: { x: number; y: number }[] = [];
+  for (let i = 0; i < steps; i++) {
+    const t = (i / steps) * Math.PI * 2;
+    const rUnit = 1 - (1 - innerRatio) * Math.pow(Math.abs(Math.sin(2 * t)), p);
+    const px = Math.cos(t) * Rx * rUnit;
+    const py = Math.sin(t) * Ry * rUnit;
+    // rotate
+    const xr = px * Math.cos(rotationRad) - py * Math.sin(rotationRad);
+    const yr = px * Math.sin(rotationRad) + py * Math.cos(rotationRad);
+    pts.push({ x: xr, y: yr });
+  }
+
+  let body = Bodies.fromVertices(x, y, [pts], common, true) as Body | null;
+  if (!body) {
+    // fallback (rare: if decomp not available)
+    body = Bodies.circle(x, y, Math.max(Rx, Ry) * 0.75, common);
+  }
+
+  const spark = Body.create({ parts: [body!], ...common });
+  Body.setPosition(spark, Vector.create(x, y));
+  Body.setAngle(spark, 0); // rotation handled by renderer via rotationRad
+
+  shapeData.set(spark, {
+    type: "sparkStar",
+    w: width,
+    h: height,
+    color,
+    outlineColor,
+    outlineWidth,
+    innerRatio,
+    curveMix,
+    curveAngle,
+    rotationRad,
+  });
+
+  return spark;
+};
+
+/** Canvas renderer with smooth bezier curves (no reliance on polygon). */
+export const renderSparkStar = (
+  ctx: CanvasRenderingContext2D,
+  body: Body,
+  shapeData: any
+) => {
+  const data = shapeData.get(body);
+  if (!data || data.type !== "sparkStar") return;
+
+  const {
+    w, h, color, outlineColor, outlineWidth,
+    innerRatio, curveMix, curveAngle, rotationRad,
+  } = data as {
+    w: number; h: number; color: string; outlineColor: string | null; outlineWidth: number;
+    innerRatio: number; curveMix: number; curveAngle: number; rotationRad: number;
+  };
+
+  const { x, y } = body.position;
+  const Rx = w / 2, Ry = h / 2;
+
+  // Work in unit circle then scale → easy ellipses
+  const polar = (ang: number, r: number) => ({
+    x: Math.cos(ang) * r,
+    y: Math.sin(ang) * r,
+  });
+  const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+
+  const tips = [0, Math.PI / 2, Math.PI, (3 * Math.PI) / 2];
+  const valleys = tips.map(a => a + Math.PI / 4);
+
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(body.angle + rotationRad);
+  ctx.scale(Rx, Ry);
+
+  // Build path with cubic beziers between tip→valley→tip
+  const start = polar(tips[0], 1);
+  ctx.beginPath();
+  ctx.moveTo(start.x, start.y);
+
+  for (let i = 0; i < 4; i++) {
+    const aTip = tips[i];
+    const aVal = valleys[i];
+    const aNextTip = tips[(i + 1) % 4];
+
+    const T = polar(aTip, 1);
+    const V = polar(aVal, Math.max(0.02, innerRatio));
+    const N = polar(aNextTip, 1);
+
+    const cR1 = lerp(1, innerRatio, curveMix);
+    const cR2 = cR1;
+
+    const C1 = polar(aTip + curveAngle, cR1);
+    const C2 = polar(aVal - curveAngle, cR2);
+    const C3 = polar(aVal + curveAngle, cR2);
+    const C4 = polar(aNextTip - curveAngle, cR1);
+
+    ctx.bezierCurveTo(C1.x, C1.y, C2.x, C2.y, V.x, V.y);
+    ctx.bezierCurveTo(C3.x, C3.y, C4.x, C4.y, N.x, N.y);
+  }
+
+  ctx.closePath();
+  ctx.fillStyle = color;
+  ctx.fill();
+
+  if (outlineColor) {
+    ctx.lineWidth = outlineWidth / Math.max(Rx, Ry); // normalize after scale
+    ctx.strokeStyle = outlineColor;
     ctx.stroke();
   }
 
