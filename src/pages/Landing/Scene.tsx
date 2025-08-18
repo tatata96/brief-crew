@@ -11,7 +11,7 @@ import Matter, {
   MouseConstraint,
   Body,
 } from "matter-js";
-import {createCircle, createArch, renderArch, createRectangleWithInnerCircles, renderRectangleWithInnerCircles, createStar, renderStar, createEye, renderEye} from "../../ui/utils/createShapes";
+import {createCircle, createArch, renderArch, createRectangleWithInnerCircles, renderRectangleWithInnerCircles, createStar, renderStar, createEye, renderEye, createMartiniGlass, renderMartiniGlass, createOliveStick, renderOliveStick} from "../../ui/utils/createShapes";
 
 export default function Scene() {
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -60,12 +60,10 @@ export default function Scene() {
 
     // Add more circles with varying sizes and colors
     const smallCircle = createCircle(width * 0.2, 80, R * 0.6, false, shapeData, false, '#00ff88');
-    const largeCircle = createCircle(width * 0.8, height * 0.7, R * 1.4, false, shapeData, false, '#8a2be2');
 
     // Add half circles
     const halfCircle1 = createCircle(width, height, R * 0.8, false, shapeData, true, '#FF6B6B');
-    const halfCircle2 = createCircle(width * 0.85, height * 0.4, R * 0.7, false, shapeData, true, '#4ECDC4');
-    const halfCircle3 = createCircle(width * 0.5, height * 0.2, R * 0.9, false, shapeData, true, '#45B7D1');
+
 
     const yellowWithDots = createRectangleWithInnerCircles(
       300, 500,           // x, y
@@ -79,17 +77,6 @@ export default function Scene() {
       shapeData
     );
 
-    const blueWithDots = createRectangleWithInnerCircles(
-      300, 500,           // x, y
-      520, 270,            // width, height
-      6,                  // circleCount
-      8,                  // padding (outer + between circles)
-      "beige",          // rectColor (yellow)
-      "white",          // circleColors (black)
-      "bottom",           // align
-      false,              // isStatic
-      shapeData
-    );
 
     const sun = createStar(420, 260, 16, 90, 45, "#FF8A00", false, shapeData);
     const star = createStar(200, 140, 8, 40, 18, "#FFD24A", true, shapeData);
@@ -97,18 +84,26 @@ export default function Scene() {
     const sun3 = createStar(950, 360, 16, 90, 45, "yellow", false, shapeData);
 
 
-    // Neutral eye, centered gaze
-const eye1 = createEye(300, 260, 180, 180, "white", "#2AA7FF", "#111", 1, 0, 0, 0.38, 0.45, "white", 3, false, shapeData);
 
-// Looking up-left, slightly squinted
-const eye2 = createEye(520, 260, 160, 70, "#FFF", "#66C08E", "#000", 0.6, -0.7, -0.4, 0.35, 0.5, null, 0, true, shapeData);
+    const glass = createMartiniGlass(
+      400, 300,              // x, y
+      260,                   // overall height
+      { bowlColor: "#FF4E1A", stemColor: "#FF4E1A", baseColor: "#FF4E1A", outlineColor: null },
+      false,                 // isStatic
+      shapeData
+    );
 
-    
+    const skewer = createOliveStick(520, 340, {
+      count: 3,
+      oliveR: 62,
+      stickMargin: 120, 
+      spacing: 150,  
+    }, false, shapeData);
     Matter.Events.on(render, 'afterRender', () => {
       const ctx = render.context;
 
       // Draw all circles
-      [circle, smallCircle, largeCircle, halfCircle1, halfCircle2, halfCircle3].forEach(circleBody => {
+      [circle, smallCircle, halfCircle1].forEach(circleBody => {
         const data = shapeData.get(circleBody);
         if (data?.type === 'circle') {
           const {x, y} = circleBody.position;
@@ -130,12 +125,7 @@ const eye2 = createEye(520, 260, 160, 70, "#FFF", "#66C08E", "#000", 0.6, -0.7, 
             gradient = ctx.createRadialGradient(0, 0, data.size * 0.2, 0, 0, data.size);
             gradient.addColorStop(0, '#00ff88');
             gradient.addColorStop(1, '#0088ff');
-          } else if (circleBody === largeCircle) {
-            // Purple to yellow gradient
-            gradient = ctx.createRadialGradient(0, 0, data.size * 0.2, 0, 0, data.size);
-            gradient.addColorStop(0, '#8a2be2');
-            gradient.addColorStop(1, '#ffff00');
-          } else {
+          }  else {
             // Solid color for half circles
             ctx.fillStyle = data.color;
             ctx.beginPath();
@@ -167,15 +157,19 @@ const eye2 = createEye(520, 260, 160, 70, "#FFF", "#66C08E", "#000", 0.6, -0.7, 
 
       // Draw the yellow rectangle with dots
       renderRectangleWithInnerCircles(ctx, yellowWithDots, shapeData);
-      renderRectangleWithInnerCircles(ctx, blueWithDots, shapeData);
 
       renderStar(ctx, sun, shapeData);
       renderStar(ctx, star, shapeData);
       renderStar(ctx, sun2, shapeData);
       renderStar(ctx, sun3, shapeData);
 
-      renderEye(ctx, eye1, shapeData);
-      renderEye(ctx, eye2, shapeData);
+
+
+      renderMartiniGlass(ctx, glass, shapeData);
+
+      renderOliveStick(ctx, skewer, shapeData,);
+
+
     });
 
     // 4) boundaries to keep shapes within the world
@@ -202,7 +196,7 @@ const eye2 = createEye(520, 260, 160, 70, "#FFF", "#66C08E", "#000", 0.6, -0.7, 
       render: {fillStyle: "#e8e8e8", },
     });
 
-    Composite.add(world, [circle, pinkArch, blueArch, smallCircle, largeCircle, halfCircle1, halfCircle2, halfCircle3, yellowWithDots, floor, leftWall, rightWall, ceiling,blueWithDots, sun, star, eye1, eye2]);
+    Composite.add(world, [circle, pinkArch, blueArch, smallCircle, halfCircle1,  yellowWithDots, floor, leftWall, rightWall, ceiling, sun, star,  glass, skewer]);
 
     // 5) basic interactivity (drag with mouse/touch)
     // 5) interactivity (drag) — but don't swallow page scroll
