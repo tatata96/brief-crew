@@ -5,6 +5,7 @@ import About from './pages/About/About'
 import Work from './pages/Work/Work'
 import Crew from './pages/Crew/Crew'
 import TypographyTest from './components/TypographyTest'
+import Footer from './components/Footer'
 
 function App() {
   const [activeSection, setActiveSection] = useState('landing')
@@ -104,6 +105,8 @@ function App() {
           <TypographyTest />
         </section>
       </main>
+      
+      <Footer />
     </div>
   )
 }

@@ -12,17 +12,24 @@
 }
 
 .about-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  position: relative;
+  margin-bottom: 3rem;
 
   h1 {
     width: auto;
+    text-align: center;
+    color: black;
   }
 }
 
+
+
 .about-content {
   padding: 2rem;
+}
+
+.about-text-2 {
+  white-space: pre-line; 
 }
 
 .about-scene-container {
