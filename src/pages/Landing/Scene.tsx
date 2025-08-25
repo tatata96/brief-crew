@@ -16,7 +16,7 @@ import {
   createTextComponent, renderTextComponent,
   ShapeStore
 } from "../../ui/utils/createShapes";
-import{ createExclamationMark, createMartiniGlass, renderExclamationMark, renderMartiniGlass } from "../../ui/utils/createShapes2";
+import{ createExclamationMark, createMartiniGlass, createOliveStick, createRectangleWithInnerCircles, createStar, renderExclamationMark, renderMartiniGlass, renderOliveStick, renderRectangleWithInnerCircles } from "../../ui/utils/createShapes2";
 import { createBagel, renderBagel } from "../../ui/utils/createShapes3";
 
 export default function Scene() {
@@ -108,6 +108,29 @@ export default function Scene() {
       shapeData
     );
 
+    const skewer = createOliveStick(520, 340, {
+      count: 3,
+      oliveR: 22,
+      stickMargin: 80, 
+      spacing: 50,
+      oliveColor: "#8CAE68",
+      pimentoColor: "#FECACA",
+      rodColor: "#E5E7EB",
+      ballColor: "#E5E7EB",
+    }, false, shapeData);
+
+    const yellowWithDots = createRectangleWithInnerCircles(
+      700, 500,           // x, y
+      220, 50,            // width, height
+      6,                  // circleCount
+      8,                  // padding (outer + between circles)
+      "#B1B5C8",      // rectColor (amber)
+      "#EBB9DF",        // circleColors (dark gray)
+      "bottom",           // align
+      false,              // isStatic
+      shapeData
+    );
+
     const pill2 = createPill(width * 0.83, height * 0.45, 60 * mobileScale, 80 * mobileScale, {
       fill: "#BEA7E5",
       text: "",
@@ -115,6 +138,8 @@ export default function Scene() {
       textColor: "#BE185D",
       rotationRad: -0.45,
     }, false, shapeData);
+
+
 
     const details = createParallelogram(width * 0.3, height * 0.5, 80 * mobileScale, 80 * mobileScale, {
       fill: "#C2F261",
@@ -273,7 +298,7 @@ export default function Scene() {
     });
 
     // ---- make everything fall from the top ----
-    const fallables = [redDot, banner, burst, pill, details, vlabel, production, cShape, textComponent,blueBagel,textComponent2,textComponent3,textComponent4,textComponent5,pill2,textComponent6,textComponent7,bang,glass];
+    const fallables = [redDot, banner, burst, pill, details, vlabel, production, cShape, textComponent,blueBagel,textComponent2,textComponent3,textComponent4,textComponent5,pill2,textComponent6,textComponent7,bang,glass,yellowWithDots,skewer];
 
     const dropFromTop = (bodies: Body[], gap = 140) => {
       bodies.forEach((b, i) => {
@@ -356,6 +381,8 @@ export default function Scene() {
       renderBagel(ctx, blueBagel, shapeData);
       renderExclamationMark(ctx, bang, shapeData);
       renderMartiniGlass(ctx, glass, shapeData);
+      renderRectangleWithInnerCircles(ctx, yellowWithDots, shapeData);
+      renderOliveStick(ctx, skewer, shapeData);
 
     });
 
