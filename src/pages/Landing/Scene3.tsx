@@ -1,7 +1,7 @@
 // Scene.tsx (imports)
 import React, { useEffect, useRef } from "react";
 import Matter, { Engine, Render, Runner, World, Bodies, Composite, Mouse, MouseConstraint, Body } from "matter-js";
-import {createBagel, renderBagel, createRibbon, renderRibbon} from "../../ui/utils/createShapes";
+import {createBagel, renderBagel, createRibbon, renderRibbon} from "../../ui/utils/createShapes3";
 
 export default function Scene() {
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -44,7 +44,7 @@ export default function Scene() {
         thickness: 70,
         text: "CHARLEMAGNE REGULAR",
         font: "700 42px Inter",
-        textColor: "#0B1220",
+        textColor: "#1E40AF", // darker blue
         textDirection: "cw",
         startAngleRad: Math.PI / 2,
       },

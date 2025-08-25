@@ -5,6 +5,76 @@ export type ShapeStore = Map<Body, any>;
 const common = (isStatic: boolean) =>
   ({ restitution: 0.4, friction: 0.4, isStatic, render: { visible: false } });
 
+/**
+ * Utility function to generate a darker version of a color for text
+ * @param backgroundColor - The background color (hex, rgb, or named color)
+ * @param darkenAmount - How much to darken (0-1, default 0.7)
+ * @returns A darker hex color string
+ */
+function getDarkerTextColor(backgroundColor: string, darkenAmount: number = 0.7): string {
+  // Handle hex colors
+  if (backgroundColor.startsWith('#')) {
+    const hex = backgroundColor.slice(1);
+    const r = parseInt(hex.slice(0, 2), 16);
+    const g = parseInt(hex.slice(2, 4), 16);
+    const b = parseInt(hex.slice(4, 6), 16);
+    
+    const darkerR = Math.max(0, Math.floor(r * (1 - darkenAmount)));
+    const darkerG = Math.max(0, Math.floor(g * (1 - darkenAmount)));
+    const darkerB = Math.max(0, Math.floor(b * (1 - darkenAmount)));
+    
+    return `#${darkerR.toString(16).padStart(2, '0')}${darkerG.toString(16).padStart(2, '0')}${darkerB.toString(16).padStart(2, '0')}`;
+  }
+  
+  // Handle rgb/rgba colors
+  if (backgroundColor.startsWith('rgb')) {
+    const match = backgroundColor.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+      const r = parseInt(match[1]);
+      const g = parseInt(match[2]);
+      const b = parseInt(match[3]);
+      
+      const darkerR = Math.max(0, Math.floor(r * (1 - darkenAmount)));
+      const darkerG = Math.max(0, Math.floor(g * (1 - darkenAmount)));
+      const darkerB = Math.max(0, Math.floor(b * (1 - darkenAmount)));
+      
+      return `rgb(${darkerR}, ${darkerG}, ${darkerB})`;
+    }
+  }
+  
+  // Handle named colors - convert to a reasonable dark color
+  const namedColorMap: { [key: string]: string } = {
+    'red': '#8B0000',
+    'green': '#006400',
+    'blue': '#00008B',
+    'yellow': '#B8860B',
+    'orange': '#8B4513',
+    'purple': '#4B0082',
+    'pink': '#8B008B',
+    'cyan': '#008B8B',
+    'teal': '#008080',
+    'indigo': '#4B0082',
+    'violet': '#8A2BE2',
+    'emerald': '#006400',
+    'lime': '#556B2F',
+    'amber': '#B8860B',
+    'sky': '#0066CC',
+    'fuscia': '#8B008B',
+    'white': '#333333',
+    'black': '#000000',
+    'gray': '#333333',
+    'grey': '#333333'
+  };
+  
+  const lowerColor = backgroundColor.toLowerCase();
+  if (namedColorMap[lowerColor]) {
+    return namedColorMap[lowerColor];
+  }
+  
+  // Fallback to a dark color
+  return '#0B1220';
+}
+
 /* =========================
    1) SOLID CIRCLE (with optional center text)
    ========================= */
@@ -23,7 +93,7 @@ export const createDot = (
   const body = Bodies.circle(x, y, r, common(isStatic));
   shapeData.set(body, {
     type: "dot", r,
-    ...{ fill: "#E11D1D", outline: null, outlineWidth: 2, text: "", font: "900 44px Inter", textColor: "#0B1220" },
+    ...{ fill: "#E11D1D", outline: null, outlineWidth: 2, text: "", font: "900 44px Inter", textColor: getDarkerTextColor("#E11D1D") },
     ...opts
   });
   return body;
@@ -60,7 +130,7 @@ export const createBanner = (
   const body = Bodies.rectangle(x, y, w, h, common(isStatic));
   shapeData?.set(body, {
     type: "banner", w, h,
-    ...{ fill: "#F59E0B", outline: null, outlineWidth: 2, text: "EXPERIENCES", font: "800 32px Inter", textColor: "#0B1220", notch: Math.min(28, h / 2 - 4), rotationRad: 0 },
+    ...{ fill: "#F59E0B", outline: null, outlineWidth: 2, text: "EXPERIENCES", font: "800 32px Inter", textColor: getDarkerTextColor("#F59E0B"), notch: Math.min(28, h / 2 - 4), rotationRad: 0 },
     ...opts
   });
   return body;
@@ -106,7 +176,7 @@ export const createBurst = (
   const body = Bodies.circle(x, y, outerR, common(isStatic));
   shapeData?.set(body, {
     type: "burst",
-    ...{ fill: "#22C55E", outline: null, outlineWidth: 2, spikes: 12, innerR: 50, outerR, rotationRad: 0, text: "GOOD\nFOOD", font: "900 24px Inter", textColor: "#0B1220" },
+    ...{ fill: "#22C55E", outline: null, outlineWidth: 2, spikes: 12, innerR: 50, outerR, rotationRad: 0, text: "GOOD\nFOOD", font: "900 24px Inter", textColor: getDarkerTextColor("#22C55E") },
     ...opts
   });
   return body;
@@ -132,7 +202,11 @@ export const renderBurst = (ctx: CanvasRenderingContext2D, body: Body, shapeData
     ctx.fillStyle = textColor; ctx.font = font; ctx.textAlign = "center"; ctx.textBaseline = "middle";
     const lines = String(text).split("\n");
     const lh = parseInt(font.match(/\d+/)?.[0] || "20", 10) * 1.1;
-    lines.forEach((ln: string, i: number) => ctx.fillText(ln, 0, (i - (lines.length - 1) / 2) * lh));
+    // Center text in the burst shape
+    lines.forEach((ln: string, i: number) => {
+      const y = (i - (lines.length - 1) / 2) * lh;
+      ctx.fillText(ln, 0, y);
+    });
   }
   ctx.restore();
 };
@@ -151,7 +225,7 @@ export const createPill = (
   const body = Bodies.rectangle(x, y, w, h, common(isStatic));
   shapeData?.set(body, {
     type: "pill", w, h,
-    ...{ fill: "#F9A8D4", outline: null, outlineWidth: 2, radius: Math.min(h/2, 56), text: "MARKETING", font: "900 28px Inter", textColor: "#0B1220", rotationRad: 0 },
+    ...{ fill: "#F9A8D4", outline: null, outlineWidth: 2, radius: Math.min(h/2, 56), text: "MARKETING", font: "900 28px Inter", textColor: getDarkerTextColor("#F9A8D4"), rotationRad: 0 },
     ...opts
   });
   return body;
@@ -198,7 +272,7 @@ export const createParallelogram = (
   const body = Bodies.rectangle(x, y, w, h, common(isStatic));
   shapeData?.set(body, {
     type: "parallelogram", w, h,
-    ...{ fill: "#A7F3D0", outline: null, outlineWidth: 2, skew: 0.35, text: "DETAILS", font: "900 28px Inter", textColor: "#0B1220", rotationRad: 0 },
+    ...{ fill: "#A7F3D0", outline: null, outlineWidth: 2, skew: 0.35, text: "DETAILS", font: "900 28px Inter", textColor: getDarkerTextColor("#A7F3D0"), rotationRad: 0 },
     ...opts
   });
   return body;
@@ -238,7 +312,7 @@ export const createVLabel = (
   const body = Bodies.rectangle(x, y, w, h, common(isStatic));
   shapeData?.set(body, {
     type: "vlabel", w, h,
-    ...{ fill: "#93C5FD", outline: null, outlineWidth: 2, radius: 18, text: "ATMOSPHERE", font: "900 22px Inter", textColor: "#0B1220" },
+    ...{ fill: "#93C5FD", outline: null, outlineWidth: 2, radius: 18, text: "ATMOSPHERE", font: "900 22px Inter", textColor: getDarkerTextColor("#93C5FD") },
     ...opts
   });
   return body;
@@ -285,7 +359,7 @@ export const createQuarterPie = (
   const body = Bodies.rectangle(x, y, radius*1.2, radius*1.2, common(isStatic));
   shapeData?.set(body, {
     type: "quarterPie", r: radius,
-    ...{ fill: "#FACC15", outline: null, outlineWidth: 2, rotationRad: 0, text: "PRODUCTION", font: "900 26px Inter", textColor: "#0B1220" },
+    ...{ fill: "#FACC15", outline: null, outlineWidth: 2, rotationRad: 0, text: "PRODUCTION", font: "900 26px Inter", textColor: getDarkerTextColor("#FACC15") },
     ...opts
   });
   return body;
@@ -304,7 +378,18 @@ export const renderQuarterPie = (ctx: CanvasRenderingContext2D, body: Body, shap
   ctx.closePath();
   ctx.fillStyle = fill; ctx.fill();
   if (outline) { ctx.lineWidth = outlineWidth; ctx.strokeStyle = outline; ctx.stroke(); }
-  if (text) { ctx.fillStyle = textColor; ctx.font = font; ctx.textAlign = "left"; ctx.textBaseline = "alphabetic"; ctx.rotate(Math.PI/6); ctx.fillText(text, r*0.25, -r*0.12); }
+  if (text) { 
+    ctx.fillStyle = textColor; 
+    ctx.font = font; 
+    ctx.textAlign = "center"; 
+    ctx.textBaseline = "middle"; 
+    // Position text in the center of the quarter pie, accounting for rotation
+    const textX = r * 0.35;
+    const textY = -r * 0.35;
+    // Apply additional rotation to keep text readable when shape is rotated
+    ctx.rotate(Math.PI/6);
+    ctx.fillText(text, textX, textY); 
+  }
   ctx.restore();
 };
 

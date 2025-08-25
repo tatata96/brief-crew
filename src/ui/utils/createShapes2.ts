@@ -1,5 +1,75 @@
 import { Bodies, Body, Vector } from "matter-js";
 
+/**
+ * Utility function to generate a darker version of a color for text
+ * @param backgroundColor - The background color (hex, rgb, or named color)
+ * @param darkenAmount - How much to darken (0-1, default 0.7)
+ * @returns A darker hex color string
+ */
+function getDarkerTextColor(backgroundColor: string, darkenAmount: number = 0.7): string {
+  // Handle hex colors
+  if (backgroundColor.startsWith('#')) {
+    const hex = backgroundColor.slice(1);
+    const r = parseInt(hex.slice(0, 2), 16);
+    const g = parseInt(hex.slice(2, 4), 16);
+    const b = parseInt(hex.slice(4, 6), 16);
+    
+    const darkerR = Math.max(0, Math.floor(r * (1 - darkenAmount)));
+    const darkerG = Math.max(0, Math.floor(g * (1 - darkenAmount)));
+    const darkerB = Math.max(0, Math.floor(b * (1 - darkenAmount)));
+    
+    return `#${darkerR.toString(16).padStart(2, '0')}${darkerG.toString(16).padStart(2, '0')}${darkerB.toString(16).padStart(2, '0')}`;
+  }
+  
+  // Handle rgb/rgba colors
+  if (backgroundColor.startsWith('rgb')) {
+    const match = backgroundColor.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+      const r = parseInt(match[1]);
+      const g = parseInt(match[2]);
+      const b = parseInt(match[3]);
+      
+      const darkerR = Math.max(0, Math.floor(r * (1 - darkenAmount)));
+      const darkerG = Math.max(0, Math.floor(g * (1 - darkenAmount)));
+      const darkerB = Math.max(0, Math.floor(b * (1 - darkenAmount)));
+      
+      return `rgb(${darkerR}, ${darkerG}, ${darkerB})`;
+    }
+  }
+  
+  // Handle named colors - convert to a reasonable dark color
+  const namedColorMap: { [key: string]: string } = {
+    'red': '#8B0000',
+    'green': '#006400',
+    'blue': '#00008B',
+    'yellow': '#B8860B',
+    'orange': '#8B4513',
+    'purple': '#4B0082',
+    'pink': '#8B008B',
+    'cyan': '#008B8B',
+    'teal': '#008080',
+    'indigo': '#4B0082',
+    'violet': '#8A2BE2',
+    'emerald': '#006400',
+    'lime': '#556B2F',
+    'amber': '#B8860B',
+    'sky': '#0066CC',
+    'fuscia': '#8B008B',
+    'white': '#333333',
+    'black': '#000000',
+    'gray': '#333333',
+    'grey': '#333333'
+  };
+  
+  const lowerColor = backgroundColor.toLowerCase();
+  if (namedColorMap[lowerColor]) {
+    return namedColorMap[lowerColor];
+  }
+  
+  // Fallback to a dark color
+  return '#0B1220';
+}
+
 export const createCircle = (x: number, y: number, radius: number, isStatic: boolean = false, shapeData: any, isHalfCircle: boolean = false, color: string) => {
   const body = Bodies.circle(x, y, radius, {
     restitution: 0.6,
@@ -1421,7 +1491,7 @@ export const createCShape = (
     outlineWidth = 0,
 
     text = "",
-    textColor = "#0B1220",
+    textColor = getDarkerTextColor(fillColor),
     font = "bold 26px sans-serif",
 
     thicknessRatio = 0.33,

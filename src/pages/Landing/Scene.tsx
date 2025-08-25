@@ -15,6 +15,7 @@ import {
   createThickC, renderThickC,
   ShapeStore
 } from "../../ui/utils/createShapes";
+import { createBagel, renderBagel } from "../../ui/utils/createShapes3";
 
 export default function Scene() {
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -57,12 +58,13 @@ export default function Scene() {
     const shapeData: ShapeStore = new Map();
 
     // ---- create all shapes at their target X positions (Y will be moved above) ----
-    const redDot = createDot(width * 0.55, height * 0.2, 90, { fill: "#D7261E" }, false, shapeData);
+    const redDot = createDot(width * 0.55, height * 0.2, 90, { fill: "#D7261E", textColor: "#8B0000" }, false, shapeData);
 
     const banner = createBanner(width * 0.74, height * 0.15, 300, 100, {
       fill: "#F59E0B",
       text: "EXPERIENCES",
       font: "800 32px Inter, system-ui, -apple-system, sans-serif",
+      textColor: "#B45309",
       notch: 28,
     }, false, shapeData);
 
@@ -71,12 +73,14 @@ export default function Scene() {
       spikes: 12, innerR: 46, outerR: 86,
       text: "GOOD\nFOOD",
       font: "900 24px Inter, system-ui, -apple-system, sans-serif",
+      textColor: "#15803D",
     }, false, shapeData);
 
     const pill = createPill(width * 0.83, height * 0.45, 220, 120, {
       fill: "#F9A8D4",
       text: "MARKETING",
       font: "900 28px Inter, system-ui, -apple-system, sans-serif",
+      textColor: "#BE185D",
       rotationRad: -0.45,
     }, false, shapeData);
 
@@ -84,6 +88,7 @@ export default function Scene() {
       fill: "#A7F3D0",
       text: "DETAILS",
       font: "900 28px Inter, system-ui, -apple-system, sans-serif",
+      textColor: "#059669",
       skew: 0.35,
     }, false, shapeData);
 
@@ -91,12 +96,14 @@ export default function Scene() {
       fill: "#93C5FD",
       text: "ATMOSPHERE",
       font: "900 24px Inter, system-ui, -apple-system, sans-serif",
+      textColor: "#1E40AF",
     }, false, shapeData);
 
     const production = createQuarterPie(width * 0.64, height * 0.55, 160, {
       fill: "#FACC15",
       text: "PRODUCTION",
       font: "900 26px Inter, system-ui, -apple-system, sans-serif",
+      textColor: "#A16207",
       rotationRad: Math.PI,
     }, false, shapeData);
 
@@ -106,15 +113,29 @@ export default function Scene() {
       startRad: -Math.PI * 0.15, endRad: Math.PI * 1.15,
     }, false, shapeData);
 
+    const blueBagel = createBagel(
+      width * 0.58, 240, 120, 230,
+      {
+        fillColor: "#60A5FA", // blue
+        thickness: 70,
+        text: "CHARLEMAGNE REGULAR",
+        font: "700 42px Inter",
+        textColor: "#1E40AF", // darker blue
+        textDirection: "cw",
+        startAngleRad: Math.PI / 2,
+      },
+      false, shapeData
+    );
     // static overlay text (kept static; not a falling shape)
     const briefCrewText = Bodies.rectangle(width * 0.15, height * 0.3, width * 0.3, height * 0.4, {
       isStatic: true, render: { visible: false },
     });
-    const baseFontSize = Math.max(24, Math.min(72, width * 0.04));
-    const lineHeight = baseFontSize * 1.2;
+    const baseFontSize =  width * 0.1;
+    console.log(baseFontSize);
+    const lineHeight = baseFontSize * 1.1;
     shapeData.set(briefCrewText, {
       type: "text",
-      text: "IT\nIS\nALL\nABOUT\nIS",
+      text: "BRIEF\nCREW",
       font: `900 ${baseFontSize}px Inter, system-ui, -apple-system, sans-serif`,
       textColor: "#000000",
       lineHeight,
@@ -193,6 +214,7 @@ export default function Scene() {
       renderVLabel(ctx, vlabel, shapeData);
       renderQuarterPie(ctx, production, shapeData);
       renderThickC(ctx, cShape, shapeData);
+      renderBagel(ctx, blueBagel, shapeData);
     });
 
     return () => {
