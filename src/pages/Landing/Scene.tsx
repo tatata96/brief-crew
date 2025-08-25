@@ -16,7 +16,7 @@ import {
   createTextComponent, renderTextComponent,
   ShapeStore
 } from "../../ui/utils/createShapes";
-import{ createExclamationMark, createMartiniGlass, createOliveStick, createRectangleWithInnerCircles, createStar, renderExclamationMark, renderMartiniGlass, renderOliveStick, renderRectangleWithInnerCircles } from "../../ui/utils/createShapes2";
+import{  createExclamationMark, createMartiniGlass, createOliveStick, createRectangleWithInnerCircles, createStar, renderExclamationMark, renderMartiniGlass, renderOliveStick, renderRectangleWithInnerCircles, renderStar } from "../../ui/utils/createShapes2";
 import { createBagel, renderBagel } from "../../ui/utils/createShapes3";
 
 export default function Scene() {
@@ -149,6 +149,8 @@ export default function Scene() {
       skew: 0.95,
     }, false, shapeData);
 
+    const sun = createStar(620, 260, 16, 90, 45, "#FDE68A", false, shapeData);
+    
     const vlabel = createVLabel(width * 0.48, height * 0.4, 90 * mobileScale, 60 * mobileScale, {
       fill: "#93C5FD",
       text: "",
@@ -298,7 +300,7 @@ export default function Scene() {
     });
 
     // ---- make everything fall from the top ----
-    const fallables = [redDot, banner, burst, pill, details, vlabel, production, cShape, textComponent,blueBagel,textComponent2,textComponent3,textComponent4,textComponent5,pill2,textComponent6,textComponent7,bang,glass,yellowWithDots,skewer];
+    const fallables = [redDot, banner, burst, pill, details, vlabel, production, cShape, textComponent,blueBagel,textComponent2,textComponent3,textComponent4,textComponent5,pill2,textComponent6,textComponent7,bang,glass,yellowWithDots,skewer,sun];
 
     const dropFromTop = (bodies: Body[], gap = 140) => {
       bodies.forEach((b, i) => {
@@ -383,6 +385,7 @@ export default function Scene() {
       renderMartiniGlass(ctx, glass, shapeData);
       renderRectangleWithInnerCircles(ctx, yellowWithDots, shapeData);
       renderOliveStick(ctx, skewer, shapeData);
+      renderStar(ctx, sun, shapeData);
 
     });
 
