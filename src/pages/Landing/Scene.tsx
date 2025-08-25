@@ -61,7 +61,7 @@ export default function Scene() {
     // ---- create all shapes at their target X positions (Y will be moved above) ----
     const redDot = createDot(width * 0.55, height * 0.2, 90, { fill: "#D7261E", textColor: "#8B0000" }, false, shapeData);
 
-    const banner = createBanner(width * 0.74, height * 0.15, 300, 100, {
+    const banner = createBanner(width * 0.74, height * 0.15, 60, 80, {
       fill: "#F59E0B",
       text: "",
       font: "800 32px Inter, system-ui, -apple-system, sans-serif",
@@ -71,14 +71,23 @@ export default function Scene() {
 
     const burst = createBurst(width * 0.68, height * 0.35, {
       fill: "#22C55E",
-      spikes: 12, innerR: 46, outerR: 86,
+      spikes: 12, innerR: 66, outerR: 46,
       text: "",
       font: "900 24px Inter, system-ui, -apple-system, sans-serif",
       textColor: "#15803D",
     }, false, shapeData);
 
-    const pill = createPill(width * 0.83, height * 0.45, 220, 120, {
+    const pill = createPill(width * 0.83, height * 0.45, 60, 30, {
       fill: "#F9A8D4",
+      text: "",
+      font: "900 28px Inter, system-ui, -apple-system, sans-serif",
+      textColor: "#BE185D",
+      rotationRad: -0.45,
+    }, false, shapeData);
+
+
+    const pill2 = createPill(width * 0.83, height * 0.45, 60, 80, {
+      fill: "#BEA7E5",
       text: "",
       font: "900 28px Inter, system-ui, -apple-system, sans-serif",
       textColor: "#BE185D",
@@ -110,12 +119,12 @@ export default function Scene() {
 
     const cShape = createThickC(width * 0.82, height * 0.65, {
       fill: "#FFEE70",
-      outerR: 170, innerR: 100,
+      outerR: 70, innerR: 20,
       startRad: -Math.PI * 0.15, endRad: Math.PI * 1.15,
     }, false, shapeData);
 
     const blueBagel = createBagel(
-      width * 0.28, 300, 120, 130,
+      width * 0.28, 600, 50, 90,
       {
         fillColor: "#60A5FA", // blue
         thickness: 70,
@@ -129,12 +138,12 @@ export default function Scene() {
     );
 
     const textComponent = createTextComponent(
-      width * 0.25, height * 0.6, 180, 80,
+      width * 0.75, height * 0.6, 200, 80,
       {
         fill: "white",
         outline: "black",
         outlineWidth: 2,
-        text: "MOOD",
+        text: "PRODUCTION",
         font: "700 28px Inter, system-ui, -apple-system, sans-serif",
         textColor: "black",
         rotationRad: -0.2,
@@ -143,12 +152,12 @@ export default function Scene() {
     );
 
     const textComponent2 = createTextComponent(
-      width * 0.25, height * 0.6, 180, 80,
+      width * 0.75, height * 0.6, 180, 80,
       {
         fill: "white",
         outline: "black",
         outlineWidth: 2,
-        text: "MOOD",
+        text: "CATERING",
         font: "700 28px Inter, system-ui, -apple-system, sans-serif",
         textColor: "black",
         rotationRad: -0.2,
@@ -157,12 +166,12 @@ export default function Scene() {
     );
 
     const textComponent3 = createTextComponent(
-      width * 0.25, height * 0.6, 180, 80,
+      width * 0.95, height * 0.6, 180, 80,
       {
         fill: "white",
         outline: "black",
         outlineWidth: 2,
-        text: "MOOD",
+        text: "MEMORIES",
         font: "700 28px Inter, system-ui, -apple-system, sans-serif",
         textColor: "black",
         rotationRad: -0.2,
@@ -171,7 +180,21 @@ export default function Scene() {
     );
 
     const textComponent4 = createTextComponent(
-      width * 0.25, height * 0.6, 180, 80,
+      width * 0.45, height * 0.6, 180, 80,
+      {
+        fill: "white",
+        outline: "black",
+        outlineWidth: 2,
+        text: "CONCEPTS",
+        font: "700 28px Inter, system-ui, -apple-system, sans-serif",
+        textColor: "black",
+        rotationRad: -0.2,
+      },
+      false, shapeData
+    );
+
+    const textComponent5 = createTextComponent(
+      width * 0.55, height * 0.6, 180, 80,
       {
         fill: "white",
         outline: "black",
@@ -184,13 +207,27 @@ export default function Scene() {
       false, shapeData
     );
 
-    const textComponent5 = createTextComponent(
-      width * 0.25, height * 0.6, 180, 80,
+    const textComponent6 = createTextComponent(
+      width * 0.44, height * 0.6, 210, 80,
       {
         fill: "white",
         outline: "black",
         outlineWidth: 2,
-        text: "MOOD",
+        text: "IMPRESSIONS",
+        font: "700 28px Inter, system-ui, -apple-system, sans-serif",
+        textColor: "black",
+        rotationRad: -0.2,
+      },
+      false, shapeData
+    );
+
+    const textComponent7 = createTextComponent(
+      width * 0.89, height * 0.6, 210, 80,
+      {
+        fill: "white",
+        outline: "black",
+        outlineWidth: 2,
+        text: "ATMOSPHERE",
         font: "700 28px Inter, system-ui, -apple-system, sans-serif",
         textColor: "black",
         rotationRad: -0.2,
@@ -213,7 +250,7 @@ export default function Scene() {
     });
 
     // ---- make everything fall from the top ----
-    const fallables = [redDot, banner, burst, pill, details, vlabel, production, cShape, textComponent,blueBagel,textComponent2,textComponent3,textComponent4,textComponent5];
+    const fallables = [redDot, banner, burst, pill, details, vlabel, production, cShape, textComponent,blueBagel,textComponent2,textComponent3,textComponent4,textComponent5,pill2,textComponent6,textComponent7];
 
     const dropFromTop = (bodies: Body[], gap = 140) => {
       bodies.forEach((b, i) => {
@@ -278,19 +315,24 @@ export default function Scene() {
 
       // shapes
       renderDot(ctx, redDot, shapeData);
+      renderTextComponent(ctx, textComponent4, shapeData);
+      renderTextComponent(ctx, textComponent5, shapeData);
       renderBanner(ctx, banner, shapeData);
       renderBurst(ctx, burst, shapeData);
       renderPill(ctx, pill, shapeData);
+      renderTextComponent(ctx, textComponent, shapeData);
+      renderTextComponent(ctx, textComponent2, shapeData);
+      renderTextComponent(ctx, textComponent3, shapeData);
+      renderPill(ctx, pill2, shapeData);
       renderParallelogram(ctx, details, shapeData);
       renderVLabel(ctx, vlabel, shapeData);
       renderQuarterPie(ctx, production, shapeData);
       renderThickC(ctx, cShape, shapeData);
+      renderTextComponent(ctx, textComponent6, shapeData);
+      renderTextComponent(ctx, textComponent7, shapeData);
       renderBagel(ctx, blueBagel, shapeData);
-      renderTextComponent(ctx, textComponent, shapeData);
-      renderTextComponent(ctx, textComponent2, shapeData);
-      renderTextComponent(ctx, textComponent3, shapeData);
-      renderTextComponent(ctx, textComponent4, shapeData);
-      renderTextComponent(ctx, textComponent5, shapeData);
+   
+
     });
 
     return () => {
