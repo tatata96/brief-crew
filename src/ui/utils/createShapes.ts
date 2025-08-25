@@ -429,3 +429,92 @@ export const renderThickC = (ctx: CanvasRenderingContext2D, body: Body, shapeDat
   if (outline) { ctx.lineWidth = outlineWidth; ctx.strokeStyle = outline; ctx.stroke(); }
   ctx.restore();
 };
+
+/* =========================
+   9) TEXT COMPONENT (rounded rectangle with text)
+   ========================= */
+type TextComponentOpts = {
+  fill?: string; 
+  outline?: string | null; 
+  outlineWidth?: number;
+  text?: string; 
+  font?: string; 
+  textColor?: string;
+  borderRadius?: number; // if not provided, will be random
+  rotationRad?: number;
+};
+export const createTextComponent = (
+  x: number, y: number, w: number, h: number,
+  opts: TextComponentOpts = {}, isStatic = false, shapeData?: ShapeStore
+) => {
+  const body = Bodies.rectangle(x, y, w, h, common(isStatic));
+  
+  // Generate random border radius if not provided
+  const borderRadius = opts.borderRadius ?? Math.random() > 0.5 ? 
+    Math.random() * Math.min(w, h) * 0.3 : 0;
+  
+  shapeData?.set(body, {
+    type: "textComponent", w, h, borderRadius,
+    ...{ 
+      fill: "#FFFFFF", 
+      outline: "#000000", 
+      outlineWidth: 1, 
+      text: "TEXT", 
+      font: "700 24px Inter, system-ui, -apple-system, sans-serif", 
+      textColor: "#000000",
+      rotationRad: 0 
+    },
+    ...opts
+  });
+  return body;
+};
+
+export const renderTextComponent = (ctx: CanvasRenderingContext2D, body: Body, shapeData: ShapeStore) => {
+  const d = shapeData.get(body);
+  if (!d || d.type !== "textComponent") return;
+  const { x, y } = body.position;
+  const { w, h, borderRadius, fill, outline, outlineWidth, text, font, textColor, rotationRad } = d;
+  
+  ctx.save();
+  ctx.translate(x, y); 
+  ctx.rotate(body.angle + rotationRad);
+  
+  // Draw rounded rectangle
+  ctx.beginPath();
+  if (borderRadius > 0) {
+    // Rounded rectangle
+    ctx.moveTo(-w/2 + borderRadius, -h/2);
+    ctx.lineTo(w/2 - borderRadius, -h/2);
+    ctx.quadraticCurveTo(w/2, -h/2, w/2, -h/2 + borderRadius);
+    ctx.lineTo(w/2, h/2 - borderRadius);
+    ctx.quadraticCurveTo(w/2, h/2, w/2 - borderRadius, h/2);
+    ctx.lineTo(-w/2 + borderRadius, h/2);
+    ctx.quadraticCurveTo(-w/2, h/2, -w/2, h/2 - borderRadius);
+    ctx.lineTo(-w/2, -h/2 + borderRadius);
+    ctx.quadraticCurveTo(-w/2, -h/2, -w/2 + borderRadius, -h/2);
+  } else {
+    // Regular rectangle
+    ctx.rect(-w/2, -h/2, w, h);
+  }
+  ctx.closePath();
+  
+  // Fill and stroke
+  ctx.fillStyle = fill; 
+  ctx.fill();
+  if (outline) { 
+    ctx.lineWidth = outlineWidth; 
+    ctx.strokeStyle = outline; 
+    ctx.stroke(); 
+  }
+  
+  // Draw text
+  if (text) { 
+    ctx.fillStyle = textColor; 
+    ctx.font = font; 
+    ctx.textAlign = "center"; 
+    ctx.textBaseline = "middle"; 
+    ctx.fillText(text, 0, 0); 
+  }
+  
+  ctx.restore();
+};
