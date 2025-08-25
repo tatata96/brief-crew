@@ -1,13 +1,40 @@
-import React from "react";
+import React, { useRef, useEffect, useState } from "react";
 import "./About.css";
+import AboutScene from "./AboutScene";
 
 const About = () => {
+  const aboutSceneRef = useRef(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      {
+        threshold: 0.1, // Trigger when 10% of the section is visible for more responsive animation
+        rootMargin: "0px 0px -50px 0px" // Start animation even earlier
+      }
+    );
+
+    if (aboutSceneRef.current) {
+      observer.observe(aboutSceneRef.current);
+    }
+
+    return () => {
+      if (aboutSceneRef.current) {
+        observer.unobserve(aboutSceneRef.current);
+      }
+    };
+  }, []);
+
   return (
     <div className="about-container">
       <div className="about-header">
-      <h1 className="typography--dirtyline-heading">About</h1>
-      <h1 className="typography--dirtyline-heading">Brief Crew</h1>
-
+        <h1 className="typography--dirtyline-heading">About</h1>
+        <h1 className="typography--dirtyline-heading">Brief Crew</h1>
       </div>
 
       <div className="about-content">
@@ -22,20 +49,11 @@ const About = () => {
             and digital experiences that matter.
           </p>
         </div>
-        <div className="about-stats">
-          <div className="stat-item">
-            <h3>50+</h3>
-            <p>Projects Completed</p>
-          </div>
-          <div className="stat-item">
-            <h3>25+</h3>
-            <p>Happy Clients</p>
-          </div>
-          <div className="stat-item">
-            <h3>5+</h3>
-            <p>Years Experience</p>
-          </div>
-        </div>
+
+      </div>
+
+      <div className="about-scene-container" ref={aboutSceneRef}>
+        {isVisible && <AboutScene />}
       </div>
     </div>
   );
