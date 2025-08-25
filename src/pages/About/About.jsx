@@ -34,7 +34,6 @@ const About = () => {
     <div className="about-container">
       <div className="about-header">
         <h1 className="typography--dirtyline-heading">About</h1>
-        <h1 className="typography--dirtyline-heading">Brief Crew</h1>
       </div>
 
       <div className="about-content">

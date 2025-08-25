@@ -406,7 +406,7 @@ export default function Scene() {
         width: "100%",
         height: `${dimensions.height}px`,
         margin: "0 auto",
-        border: "1px solid #eee",
+        border: "0px solid #eee",
       }}
     />
   );
