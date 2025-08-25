@@ -39,7 +39,6 @@
   font-size: 4rem;
   font-weight: bold;
   margin-bottom: 1.5rem;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
   line-height: 1.2;
 }
 
@@ -54,7 +53,6 @@
   font-size: 1.5rem;
   margin-bottom: 2rem;
   opacity: 0.9;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .hero-description {
@@ -64,9 +62,6 @@
   line-height: 1.8;
 }
 
-.hero-description p {
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-}
 
 .hero-actions {
   display: flex;

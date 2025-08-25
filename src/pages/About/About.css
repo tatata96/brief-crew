@@ -1,7 +1,8 @@
-/*.about-section {
-  border-top: 4px dotted #3d6bff;
+.about-section {
+ /* border-top: 4px dotted #3d6bff;*/
+ margin-top: 100px;
 }
-  */
+
 
 .about-container {
   width: 100%;
@@ -49,7 +50,7 @@
   font-size: 3.5rem;
   font-weight: bold;
   margin-bottom: 2rem;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+
 }
 
 .about-text {
@@ -61,7 +62,6 @@
 
 .about-text p {
   margin-bottom: 1.5rem;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .about-stats {
