@@ -17,7 +17,7 @@ body {
 }
 
 /* Fixed Header */
-.header {
+.main-header {
   position: fixed;
   top: 0;
   left: 0;
@@ -106,9 +106,6 @@ body {
 /* Sections */
 .section {
   min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   padding: 2rem;
 }
 
@@ -121,6 +118,9 @@ body {
 
 .about-section {
   background: linear-gradient(180deg, #ffffff 0%, #fffbe8 100%);
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
 }
 
 .work-section {

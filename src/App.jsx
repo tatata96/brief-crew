@@ -38,7 +38,7 @@ function App() {
   return (
     <div className="app">
       {/* Fixed Header */}
-      <header className="header">
+      <header className="main-header">
         <div className="header-content">
           <h1 className="typography--tropikal-display logo" onClick={() => scrollToSection('landing')}>
             BRIEF CREW

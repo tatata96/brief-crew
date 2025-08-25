@@ -1,39 +1,40 @@
 import React, {useRef, useEffect, useState} from "react";
 import "./About.css";
 import AboutScene from "./AboutScene";
+import Header from "../../components/Header";
 
 const About = () => {
   const aboutSceneRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
+    const el = aboutSceneRef.current;
+    if (!el) return;
+  
+    const io = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
+          io.unobserve(entry.target); // fire once
         }
       },
       {
-        threshold: 0.1, // Trigger when 10% of the section is visible for more responsive animation
-        rootMargin: "0px 0px -50px 0px", // Start animation even earlier
+        root: null,
+        // Start ~400px before the element actually enters the viewport
+        rootMargin: '400px 0px 400px 0px',
+        threshold: 0, // fire as soon as it touches the extended root
       }
     );
-
-    if (aboutSceneRef.current) {
-      observer.observe(aboutSceneRef.current);
-    }
-
-    return () => {
-      if (aboutSceneRef.current) {
-        observer.unobserve(aboutSceneRef.current);
-      }
-    };
+  
+    io.observe(el);
+    return () => io.disconnect();
   }, []);
+  
 
   return (
     <div className="about-container">
       <div className="about-header">
-        <h1 className="typography--tropikal-display">About</h1>
+        <Header text="About" trigger={isVisible} />
       </div>
 
       <div className="about-content">
