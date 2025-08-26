@@ -1,4 +1,5 @@
 @import "./typography-mixins";
+@import "./_fonts";
 
 .typography--h0 {
   @include typography--h0();
@@ -78,6 +79,48 @@
 
 .typography--tagline {
   @include typography--tagline();
+}
+
+// Dirtyline 36days typography classes
+.typography--dirtyline-display {
+  @include typography--dirtyline-display();
+}
+
+.typography--dirtyline-heading {
+  @include typography--dirtyline-heading();
+}
+
+.typography--dirtyline-subheading {
+  @include typography--dirtyline-subheading();
+}
+
+.typography--dirtyline-body {
+  @include typography--dirtyline-body();
+}
+
+.typography--dirtyline-small {
+  @include typography--dirtyline-small();
+}
+
+// Tropikal typography classes
+.typography--tropikal-display {
+  @include typography--tropikal-display();
+}
+
+.typography--tropikal-heading {
+  @include typography--tropikal-heading();
+}
+
+.typography--tropikal-subheading {
+  @include typography--tropikal-subheading();
+}
+
+.typography--tropikal-body {
+  @include typography--tropikal-body();
+}
+
+.typography--tropikal-small {
+  @include typography--tropikal-small();
 }
 
 .color--text-main {

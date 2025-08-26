@@ -3,6 +3,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  width: 100%;
 }
 
 body {
@@ -16,14 +17,12 @@ body {
 }
 
 /* Fixed Header */
-.header {
+.main-header {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   z-index: 1000;
   padding: 1rem 0;
 }
@@ -43,6 +42,7 @@ body {
   color: #333;
   text-decoration: none;
   cursor: pointer;
+  color: var(--black);
   transition: all 0.3s ease;
 }
 
@@ -106,30 +106,30 @@ body {
 /* Sections */
 .section {
   min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   padding: 2rem;
 }
 
 .landing-section {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  //background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: var(--orange-800);
+  height: 10vh;
+  padding: 0;
 }
 
 .about-section {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  color: white;
+  background: linear-gradient(180deg, #ffffff 0%, #fffbe8 100%);
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
 }
 
 .work-section {
-  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-  color: white;
+  background: linear-gradient(360deg, #ffffff 0%, #fffbe8 100%);
 }
 
 .crew-section {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: linear-gradient(179deg, #ffffff 0%, #faecf7 100%);
+
 }
 
 /* Responsive Design */

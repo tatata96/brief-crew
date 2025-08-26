@@ -1,0 +1,22 @@
+.header {
+  transition: font-family 0.3s ease-in-out, font-size 0.3s ease-in-out, font-weight 0.3s ease-in-out;
+  margin: 0;
+  padding: 0;
+  position: relative; /* Ensure it's not fixed */
+  width: auto;
+  text-align: center;
+  color: black;
+}
+
+/* Ensure smooth font transitions */
+.header,
+.header.typography--h1,
+.header.typography--dirtyline-display,
+.header.typography--tropikal-display {
+  /* ensure nothing scales */
+  transform: none !important;
+  animation: none !important;
+
+  /* keep the same transition rule here too (no font-size) */
+  transition: font-weight 0.3s ease-in-out !important;
+}

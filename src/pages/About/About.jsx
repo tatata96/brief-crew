@@ -1,44 +1,89 @@
-import React from 'react'
-import './About.css'
+import React, {useRef, useEffect, useState} from "react";
+import "./About.css";
+import AboutScene from "./AboutScene";
+import Header from "../../components/Header";
 
 const About = () => {
+  const aboutSceneRef = useRef(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const el = aboutSceneRef.current;
+    if (!el) return;
+  
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          io.unobserve(entry.target); // fire once
+        }
+      },
+      {
+        root: null,
+        // Start ~400px before the element actually enters the viewport
+        rootMargin: '400px 0px 400px 0px',
+        threshold: 0, // fire as soon as it touches the extended root
+      }
+    );
+  
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  
+
   return (
     <div className="about-container">
+      <div className="about-header">
+        <Header text="About" trigger={isVisible} />
+      </div>
+
       <div className="about-content">
-        <h1 className="about-title">About Brief Crew</h1>
         <div className="about-text">
-          <p>
-            Welcome to Brief Crew, where creativity meets innovation. We are a dynamic team 
-            of passionate professionals dedicated to delivering exceptional results in every project.
+          <p className="typography--body-large">
+            We’re Brief Crew, an event planning studio led by three women
+            with three complementary superpowers: an engineer’s precision, an
+            auditor’s rigor, and an agency producer’s creative flair.      <br /> Together,
+            we turn ideas into unforgettable experiences—beautifully designed,
+            flawlessly executed, and perfectly on-budget. 
+            <br />      <br />
+            From intimate dinners
+            and private celebrations to brand activations, corporate offsites,
+            and weddings, we plan every kind of event. We handle it end-to-end:
+            concept and moodboards, venue scouting, production timelines, vendor
+            management, guest communications, and on-site direction—so you can
+            actually enjoy your own event. Our network is deep and flexible.
+            <br />
+            <br />Think: production crews, set design and styling, florists, lighting
+            & A/V, photographers and videographers, live entertainment, and
+            seriously good food—from boutique caterers to chef-led tasting menus
+            and cocktail bars. We curate the right team for your vision,
+            culture, and budget to create the ambiance (and memories) people
+            talk about long after the night ends.
           </p>
-          <p>
-            Founded with a vision to transform ideas into reality, we specialize in creating 
-            cutting-edge solutions that drive success for our clients. Our approach combines 
-            technical expertise with creative thinking to deliver projects that exceed expectations.
+         {/*<p style={{ whiteSpace: 'pre-line' , textAlign: 'left'}} className="typography--h5-medium about-text-2">
+            <p style={{ fontWeight: 'bold' }}>How we work:</p>
+            Design + logistics in balance. <br />
+            Creative concepts backed<br />
+            by detailed run-of-show and risk planning. <br />
+            Transparent budgeting.<br />
+            Clear quotes, no surprises. Quality, sustainably minded. Where
+            possible, we source locally and minimize waste. <br />
+            Flexible &
+            inclusive. We build experiences for diverse tastes, teams, and
+            traditions. <br />
+            
+            Based in Istanbul, working across Turkey and Europe. Let’s plan something
+            unforgettable—start with a brief and we’ll take it from there.
           </p>
-          <p>
-            With years of experience across various industries, our team brings diverse 
-            perspectives and skills to every challenge. We believe in collaboration, 
-            continuous learning, and pushing the boundaries of what's possible.
-          </p>
-        </div>
-        <div className="about-stats">
-          <div className="stat-item">
-            <h3>50+</h3>
-            <p>Projects Completed</p>
-          </div>
-          <div className="stat-item">
-            <h3>25+</h3>
-            <p>Happy Clients</p>
-          </div>
-          <div className="stat-item">
-            <h3>5+</h3>
-            <p>Years Experience</p>
-          </div>
+          */}
         </div>
       </div>
-    </div>
-  )
-}
 
-export default About 
+      <div className="about-scene-container" ref={aboutSceneRef}>
+        {isVisible && <AboutScene />}
+      </div>
+    </div>
+  );
+};
+
+export default About;

@@ -72,12 +72,6 @@ const Work = () => {
             </div>
           ))}
         </div>
-        
-        <div className="work-cta">
-          <h2>Ready to Start Your Project?</h2>
-          <p>Let's create something amazing together</p>
-          <button className="cta-button">Get In Touch</button>
-        </div>
       </div>
     </div>
   )
