@@ -1,60 +1,64 @@
-import React from 'react'
+import React, {useRef, useEffect, useState} from "react";
 import './Work.css'
+import Header from "../../components/Header";
+
 
 const Work = () => {
   const projects = [
     {
       id: 1,
-      title: "E-Commerce Platform",
+      title: "Efes Lansman",
       description: "A modern e-commerce solution with advanced features and seamless user experience.",
-      category: "Web Development",
-      image: "https://via.placeholder.com/300x200/ff6b6b/ffffff?text=E-Commerce"
+      category: "Efes Lansman",
+      image: "./events/image.png"
     },
     {
       id: 2,
-      title: "Mobile App Design",
+      title: "Cocktail Bar Opening",
       description: "Innovative mobile application with intuitive design and powerful functionality.",
-      category: "Mobile Development",
-      image: "https://via.placeholder.com/300x200/4ecdc4/ffffff?text=Mobile+App"
+      category: "Cocktail Bar Opening",
+      image: "./events/image-2.png"
     },
     {
       id: 3,
-      title: "Brand Identity",
+      title: "Cafe Opening",
       description: "Complete brand identity design including logo, colors, and marketing materials.",
-      category: "Branding",
-      image: "https://via.placeholder.com/300x200/45b7d1/ffffff?text=Brand+Identity"
-    },
-    {
-      id: 4,
-      title: "Digital Marketing",
-      description: "Comprehensive digital marketing strategy with measurable results and ROI.",
-      category: "Marketing",
-      image: "https://via.placeholder.com/300x200/96ceb4/ffffff?text=Digital+Marketing"
-    },
-    {
-      id: 5,
-      title: "UI/UX Design",
-      description: "User-centered design approach creating engaging and accessible interfaces.",
-      category: "Design",
-      image: "https://via.placeholder.com/300x200/ffeaa7/333333?text=UI+UX+Design"
-    },
-    {
-      id: 6,
-      title: "Consulting Services",
-      description: "Strategic consulting to help businesses optimize their digital presence.",
-      category: "Consulting",
-      image: "https://via.placeholder.com/300x200/dda0dd/ffffff?text=Consulting"
+      category: "Cafe Opening",
+      image: "./events/image-3.png"
     }
   ]
+  const aboutSceneRef = useRef(null);
 
+    const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const el = aboutSceneRef.current;
+    if (!el) return;
+  
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          io.unobserve(entry.target); // fire once
+        }
+      },
+      {
+        root: null,
+        // Start ~400px before the element actually enters the viewport
+        rootMargin: '400px 0px 400px 0px',
+        threshold: 0, // fire as soon as it touches the extended root
+      }
+    );
+  
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  
   return (
     <div className="work-container">
-      <div className="work-content">
-        <h1 className="work-title">Our Work</h1>
-        <p className="work-subtitle">
-          Discover our portfolio of successful projects and innovative solutions
-        </p>
-        
+      <div className="work-content"  ref={aboutSceneRef}>
+        <Header text="Works" trigger={isVisible} />
+
         <div className="projects-grid">
           {projects.map((project) => (
             <div key={project.id} className="project-card">

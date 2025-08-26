@@ -26,6 +26,7 @@
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   gap: 2rem;
   margin-bottom: 4rem;
+  margin-top: 2rem;
 }
 
 .member-card {
@@ -35,6 +36,7 @@
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid #cf843e;
 }
 
 .member-card:hover {
@@ -82,14 +84,14 @@
   font-size: 1.4rem;
   font-weight: bold;
   margin-bottom: 0.3rem;
-  color: white;
+  color: rgb(61, 48, 48);
 }
 
 .member-role {
   font-size: 1rem;
   font-weight: 500;
   margin-bottom: 1rem;
-  color: rgba(255, 255, 255, 0.8);
+  color: rgb(106, 80, 80);
 }
 
 .member-bio {
