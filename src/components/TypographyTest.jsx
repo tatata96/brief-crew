@@ -6,7 +6,7 @@ const TypographyTest = () => {
       <h1 className="typography--h0">H0 - Poppins Bold</h1>
       <h1 className="typography--h1">H1 - Poppins Bold</h1>
       <h2 className="typography--h2">H2 - Poppins Bold</h2>
-      <h3 className="typography--h3">H3 - Poppins SemiBold</h3>
+      <h3 className="typography--h3">H3 - Poppins SemiBoldddd</h3>
       <h4 className="typography--h4">H4 - Poppins SemiBold</h4>
       <h4 className="typography--h4-mono">H4 Mono - Anonymous Pro</h4>
       <h5 className="typography--h5">H5 - Space Grotesk Regular</h5>
