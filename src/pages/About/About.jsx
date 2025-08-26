@@ -33,12 +33,12 @@ const About = () => {
 
   return (
     <div className="about-container">
-      <div className="about-header">
+      <div className="about-header"  ref={aboutSceneRef}>
         <Header text="About" trigger={isVisible} />
       </div>
 
       <div className="about-content">
-        <div className="about-text">
+        <div className="about-text" style={{textAlign: 'left'}}>
           <p className="typography--body-large">
             We’re Brief Crew, an event planning studio led by three women
             with three complementary superpowers: an engineer’s precision, an
@@ -53,12 +53,14 @@ const About = () => {
             management, guest communications, and on-site direction—so you can
             actually enjoy your own event. Our network is deep and flexible.
             <br />
-            <br />Think: production crews, set design and styling, florists, lighting
+            <br />
+            <p className="typography--h4-mono" style={{fontWeight: 'bold'}}>Think: production crews, set design and styling, florists, lighting
             & A/V, photographers and videographers, live entertainment, and
             seriously good food—from boutique caterers to chef-led tasting menus
             and cocktail bars. We curate the right team for your vision,
             culture, and budget to create the ambiance (and memories) people
             talk about long after the night ends.
+            </p>
           </p>
          {/*<p style={{ whiteSpace: 'pre-line' , textAlign: 'left'}} className="typography--h5-medium about-text-2">
             <p style={{ fontWeight: 'bold' }}>How we work:</p>
@@ -79,7 +81,7 @@ const About = () => {
         </div>
       </div>
 
-      <div className="about-scene-container" ref={aboutSceneRef}>
+      <div className="about-scene-container">
         {isVisible && <AboutScene />}
       </div>
     </div>

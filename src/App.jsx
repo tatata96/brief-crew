@@ -100,10 +100,6 @@ function App() {
           <Crew />
         </section>
         
-        {/* Typography Test Section */}
-        <section id="typography-test" className="section">
-          <TypographyTest />
-        </section>
       </main>
       
       <Footer />

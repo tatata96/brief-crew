@@ -4,16 +4,16 @@ import "./Footer.css";
 const Footer = () => {
   return (
     <footer className="footer">
-      <div className="footer-content">
-        <div className="footer-section">
-          <h3 className="footer-title">Brief Crew</h3>
+      <div className="footer-content ">
+        <div className="footer-section typography--body-mono">
+          <h3 className="footer-title ">Brief Crew</h3>
           <p className="footer-description">
             Event planning studio creating unforgettable experiences
           </p>
         </div>
         
         <div className="footer-section">
-          <h4 className="footer-subtitle">Connect with us</h4>
+          <h4 className="footer-subtitle typography--h5">Connect with us</h4>
           <div className="social-links">
             <a
               href="https://facebook.com"
@@ -49,11 +49,11 @@ const Footer = () => {
         </div>
         
         <div className="footer-section">
-          <h4 className="footer-subtitle">Contact</h4>
-          <p className="footer-contact">
+          <h4 className="footer-subtitle typography--h5">Contact</h4>
+          <p className="footer-contact typography--body-mono">
             Based in Istanbul, working across Turkey and Europe
           </p>
-          <p className="footer-contact">
+          <p className="footer-contact ">
             Let's plan something unforgettable
           </p>
         </div>
@@ -61,7 +61,7 @@ const Footer = () => {
       
       <div className="footer-bottom">
         <p className="footer-copyright">
-          © 2024 Brief Crew. All rights reserved.
+          © 2025 Brief Crew. All rights reserved.
         </p>
       </div>
     </footer>
