@@ -6,6 +6,7 @@ import Header from "../../components/Header";
 const About = () => {
   const aboutSceneRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
+  const blobRef = useRef(null);
 
   useEffect(() => {
     const el = aboutSceneRef.current;
@@ -29,10 +30,26 @@ const About = () => {
     io.observe(el);
     return () => io.disconnect();
   }, []);
+
+  // Gradient blob cursor following effect
+  useEffect(() => {
+    const blob = blobRef.current;
+    if (!blob) return;
+
+    const handleMouseMove = (e) => {
+      blob.style.transform = `translate3d(calc(${e.clientX}px - 50%), calc(${e.clientY}px - 50%), 0)`;
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    return () => document.removeEventListener('mousemove', handleMouseMove);
+  }, []);
   
 
   return (
     <div className="about-container">
+      {/* Gradient blob that follows cursor */}
+      <div className="blob" ref={blobRef}></div>
+      
       <div className="about-header"  ref={aboutSceneRef}>
         <Header text="About" trigger={isVisible} />
       </div>

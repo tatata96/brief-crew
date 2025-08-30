@@ -6,7 +6,7 @@ import Matter, {
 
 import {
   createTextComponent, renderTextComponent
-} from "../../ui/utils/createShapes";
+} from "../../ui/utils/createShapes4";
 
 export default function AboutScene() {
   const containerRef = useRef(null);
