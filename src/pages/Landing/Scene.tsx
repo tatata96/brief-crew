@@ -96,12 +96,6 @@ export default function Scene() {
     );
 
        
-        const vlabel = createVLabel(width * 0.48, height * 0.4, 90 * mobileScale, 60 * mobileScale, {
-          fill: "#93C5FD",
-          text: "",
-          font: `900 ${24 * mobileFontScale}px Inter, system-ui, -apple-system, sans-serif`,
-          textColor: "#1E40AF",
-        }, false, shapeData);
 
     // Create multiple falling objects for better collision testing
     const skewer = createOliveStick(520, 340, {
@@ -131,19 +125,34 @@ export default function Scene() {
     }, false, shapeData);
 
     */
-    // Create multiple stars with different properties
-    const star1 = createStar(620, 260, 16, 90, 45, "#FDE68A", false, shapeData);
+    // Create 20 varied stars and bursts with different properties
+    const stars: Body[] = [];
+    
+    // Create 12 stars with varying parameters
 
-    console.log('Star1 created:', star1);
-    console.log('Star1 isStatic:', star1.isStatic);
-
-    const star2 = createStar(620, 260, 16, 90, 45, "#FDE68A", false, shapeData);
-
-    const star3 = createStar(620, 260, 16, 90, 45, "#FDE68A", false, shapeData);
-
-    const star4 = createStar(620, 260, 16, 90, 45, "#FDE68A", false, shapeData);
-
-    const star5 = createStar(620, 260, 16, 90, 45, "#FDE68A", false, shapeData);
+    // Create 8 bursts with varying parameters
+    for (let i = 0; i < 18; i++) {
+      const innerR = 20 + Math.random() * 30; // 60-100 radius
+      const outerR = innerR * 0.6 + Math.random() * 0.4; // 60-100% of inner radius
+      const spikes = 6 + Math.random() * 0.4; // 6-16 spikes (max 16)
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      
+      const burst = createBurst(
+        620, 260, // Initial position (will be set later)
+        {
+          fill: color,
+          spikes: spikes,
+          innerR: innerR,
+          outerR: outerR,
+          text: "",
+          font: `900 ${24 * mobileFontScale}px Inter, system-ui, -apple-system, sans-serif`,
+          textColor: color,
+        },
+        false,
+        shapeData
+      );
+      stars.push(burst);
+    }
 
     // Create a simple test star to debug physics
     const testStar = Bodies.circle(100, 100, 15, {
@@ -182,7 +191,7 @@ export default function Scene() {
 
     shapeData.set(briefCrewText, {
       type: "text",
-      text: "IT IS \nALL\nABOUuuuT",
+      text: "IT IS \nALL\nABOUT",
       font: `900 ${baseFontSize}px Trocchi, system-ui, -apple-system, sans-serif`,
       textColor: "#000000",
       textAlign: "center",
@@ -190,9 +199,7 @@ export default function Scene() {
     });
 
     // Combine all falling shapes
-    const allFallingShapes = [star1, star2, star3, star4, star5, testStar
-      , vlabel, burst
-    ];
+    const allFallingShapes = [...stars, testStar,skewer, burst];
 
     // Make shapes fall from above the screen with better distribution
     const dropFromTop = (bodies: Body[], gap = 120) => {
@@ -224,14 +231,14 @@ export default function Scene() {
     dropFromTop(allFallingShapes);
 
     // Force stars to have stronger initial movement
-    [skewer, star1, star2, star3, star4, star5].forEach((star, i) => {
+    [skewer, ...stars].forEach((star, i) => {
       Body.setVelocity(star, {x: 0, y: 5}); // Strong downward velocity
       console.log(`Star ${i + 1} forced velocity:`, star.velocity);
     });
 
     // Debug: Log all bodies in the world
     console.log('All falling shapes:', allFallingShapes);
-    console.log('Stars created:', [star1, star2, star3, star4, star5]);
+    console.log('Stars created:', stars);
 
     // Add boundaries (no ceiling so bodies can enter from above)
     const floor = Bodies.rectangle(width / 2, height - 20, width, 40, {isStatic: true, render: {visible: false}});
@@ -256,7 +263,7 @@ export default function Scene() {
     }));
 
     // Debug: Check star properties
-    [star1, star2, star3, star4, star5].forEach((star, i) => {
+    stars.forEach((star, i) => {
       console.log(`Star ${i + 1} properties:`, {
         isStatic: star.isStatic,
         position: star.position,
@@ -322,7 +329,7 @@ export default function Scene() {
     Matter.Events.on(engine, 'afterUpdate', () => {
       frameCount++;
       if (frameCount % 60 === 0) { // Every 60 frames (about 1 second)
-        [star1, star2, star3, star4, star5].forEach((star, i) => {
+        stars.forEach((star, i) => {
           if (star.isStatic) {
             console.log(`Forcing star ${i + 1} to be non-static`);
             Body.setStatic(star, false);
@@ -404,13 +411,16 @@ export default function Scene() {
             */
       renderOliveStick(ctx, skewer, shapeData);
 
-      renderStar(ctx, star1, shapeData);
-      renderStar(ctx, star2, shapeData);
-      renderStar(ctx, star3, shapeData);
-      renderStar(ctx, star4, shapeData);
-      renderStar(ctx, star5, shapeData);
-      renderVLabel(ctx, vlabel, shapeData);
-      renderBurst(ctx, burst, shapeData);
+      // Render all stars and bursts
+      stars.forEach((star) => {
+        const starData = shapeData.get(star);
+        if (starData?.type === 'star') {
+          renderStar(ctx, star, shapeData);
+        } else if (starData?.type === 'burst') {
+          renderBurst(ctx, star, shapeData);
+        }
+      });
+      
 
       // Render test star
       const testStarData = shapeData.get(testStar);
