@@ -1,20 +1,33 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, {useEffect, useRef, useState} from "react";
 import Matter, {
   Engine, Render, Runner, World, Bodies, Composite,
   Mouse, MouseConstraint, Body
 } from "matter-js";
-import {createMartiniGlass, renderMartiniGlass} from "../../ui/utils/createShapes";
+import {createMartiniGlass, renderMartiniGlass, createCogwheel, renderCogwheel, createOliveStick, renderOliveStick} from "../../ui/utils/createShapes";
+import {createStar, renderStar} from "../../ui/utils/createShapes2";
+import {  createVLabel, renderVLabel, createBurst, renderBurst}from "../../ui/utils/createShapes4";  
 
+let colors = [
+  "#FFD601",
+  "#FF8CF4",
+  "#EE4A37",
+  "#8A0F52",
+  "#0F3DD4",
+  "#0C7114",
+  "#88E1FF",
+  "#d41b1b"
+];
 
 export default function Scene() {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const [dimensions, setDimensions] = useState({ width: 1000, height: 600 });
+  const [dimensions, setDimensions] = useState({width: 1000, height: 600});
+  const [showCollisionBodies, setShowCollisionBodies] = useState(false); // Debug flag
 
   useEffect(() => {
     const updateDimensions = () => {
       const width = window.innerWidth;
       const height = Math.max(600, window.innerHeight * 0.8);
-      setDimensions({ width, height });
+      setDimensions({width, height});
     };
     updateDimensions();
     window.addEventListener("resize", updateDimensions);
@@ -24,14 +37,14 @@ export default function Scene() {
   useEffect(() => {
     if (!containerRef.current) return;
 
-    const { width, height } = dimensions;
-    
+    const {width, height} = dimensions;
+
     // Responsive scaling for mobile devices
     const isMobile = width < 768;
     const mobileScale = isMobile ? 0.6 : 1;
     const mobileFontScale = isMobile ? 0.7 : 1;
 
-    const engine = Engine.create({ gravity: { x: 0, y: 0 } });
+    const engine = Engine.create({gravity: {x: 0, y: 0.5}});
     const world = engine.world;
 
     const render = Render.create({
@@ -51,19 +64,17 @@ export default function Scene() {
 
     const shapeData: Map<Body, any> = new Map();
 
-    const martiniHeight = 120 * mobileScale;
-    const martiniWidth = martiniHeight * 0.6;
-
     // Create two identical martini glasses on left and right sides
     const leftMartini = createMartiniGlass(
       width * 0.2, // left side
       height * 0.6,  // center vertically
       400 * mobileScale, // height
-      { 
-        bowlColor: "#BFD5E2", 
-        stemColor: "#BFD5E2", 
-        baseColor: "#BFD5E2", 
-        outlineColor: null 
+      {
+        bowlColor: "#BFD5E2",
+        stemColor: "#BFD5E2",
+        baseColor: "#BFD5E2",
+        outlineColor: null,
+        showCollision: showCollisionBodies
       },
       true, // static - won't move
       shapeData
@@ -73,48 +84,285 @@ export default function Scene() {
       width * 0.80, // right side
       height * 0.6,  // center vertically
       400 * mobileScale, // height
-      { 
-        bowlColor: "#BFD5E2", 
-        stemColor: "#BFD5E2", 
-        baseColor: "#BFD5E2", 
-        outlineColor: null 
+      {
+        bowlColor: "#BFD5E2",
+        stemColor: "#BFD5E2",
+        baseColor: "#BFD5E2",
+        outlineColor: null,
+        showCollision: showCollisionBodies
       },
       true, // static - won't move
       shapeData
     );
 
+       
+        const vlabel = createVLabel(width * 0.48, height * 0.4, 90 * mobileScale, 60 * mobileScale, {
+          fill: "#93C5FD",
+          text: "",
+          font: `900 ${24 * mobileFontScale}px Inter, system-ui, -apple-system, sans-serif`,
+          textColor: "#1E40AF",
+        }, false, shapeData);
+
+    // Create multiple falling objects for better collision testing
+    const skewer = createOliveStick(520, 340, {
+      count: 3,
+      oliveR: 22,
+      stickMargin: 80,
+      spacing: 50,
+      oliveColor: "#8CAE68",
+      pimentoColor: "#FECACA",
+      rodColor: "#E5E7EB",
+      ballColor: "#E5E7EB",
+    }, false, shapeData);
+
+    /*/ Create some additional falling objects
+    const cogwheel1 = createCogwheel(300, 200, 40, {
+      fillColor: colors[0],
+      pointCount: 8,
+      innerRadius: 15,
+      outerRadius: 20,
+    }, false, shapeData);
+
+    const cogwheel2 = createCogwheel(700, 150, 35, {
+      fillColor: colors[1],
+      pointCount: 6,
+      innerRadius: 12,
+      outerRadius: 17,
+    }, false, shapeData);
+
+    */
+    // Create multiple stars with different properties
+    const star1 = createStar(620, 260, 16, 90, 45, "#FDE68A", false, shapeData);
+
+    console.log('Star1 created:', star1);
+    console.log('Star1 isStatic:', star1.isStatic);
+
+    const star2 = createStar(620, 260, 16, 90, 45, "#FDE68A", false, shapeData);
+
+    const star3 = createStar(620, 260, 16, 90, 45, "#FDE68A", false, shapeData);
+
+    const star4 = createStar(620, 260, 16, 90, 45, "#FDE68A", false, shapeData);
+
+    const star5 = createStar(620, 260, 16, 90, 45, "#FDE68A", false, shapeData);
+
+    // Create a simple test star to debug physics
+    const testStar = Bodies.circle(100, 100, 15, {
+      isStatic: false,
+      restitution: 0.8,
+      friction: 0.1,
+      density: 0.001,
+      render: {visible: false},
+    });
+    shapeData.set(testStar, {
+      type: "testStar",
+      x: 100,
+      y: 100,
+      size: 30,
+      options: {fillColor: "#FF0000", pointCount: 5, innerRadius: 10, outerRadius: 15}
+    });
+
+
+      const burst = createBurst(width * 0.68, height * 0.35, {
+          fill: "#22C55E",
+          spikes: 12, innerR: 66 * mobileScale, outerR: 46 * mobileScale,
+          text: "",
+          font: `900 ${24 * mobileFontScale}px Inter, system-ui, -apple-system, sans-serif`,
+          textColor: "#15803D",
+        }, false, shapeData);
+
+
     // Static overlay text (centered)
     const briefCrewText = Bodies.rectangle(width * 0.5, height * 0.5, width * 0.6, height * 0.4, {
-      isStatic: true, 
-      render: { visible: false },
+      isStatic: true,
+      render: {visible: false},
     });
-    
+
     const baseFontSize = width * 0.08 * mobileFontScale;
     const lineHeight = baseFontSize * 1.2;
-    
+
     shapeData.set(briefCrewText, {
       type: "text",
-      text: "IT IS \nALL\nABOUT",
+      text: "IT IS \nALL\nABOUuuuT",
       font: `900 ${baseFontSize}px Trocchi, system-ui, -apple-system, sans-serif`,
       textColor: "#000000",
       textAlign: "center",
       lineHeight,
     });
 
+    // Combine all falling shapes
+    const allFallingShapes = [star1, star2, star3, star4, star5, testStar
+      , vlabel, burst
+    ];
+
+    // Make shapes fall from above the screen with better distribution
+    const dropFromTop = (bodies: Body[], gap = 120) => {
+      bodies.forEach((b, i) => {
+        // Distribute objects across the screen width and above
+        const x = width * 0.1 + (i * 0.8 * width / bodies.length) + (Math.random() - 0.5) * 100;
+        const y = - (i * gap + 100 + Math.random() * 80);
+
+        Body.setPosition(b, {x, y});
+        Body.setAngle(b, (Math.random() - 0.5) * Math.PI); // Full rotation range
+
+        // Add random initial velocity for more dynamic movement
+        Body.setVelocity(b, {
+          x: (Math.random() - 0.5) * 3,
+          y: 2 + Math.random() * 2
+        });
+
+        // Add some angular velocity for spinning
+        Body.setAngularVelocity(b, (Math.random() - 0.5) * 0.1);
+
+        // Debug logging for stars
+        const bodyData = shapeData.get(b);
+        if (bodyData?.type === 'star') {
+          console.log(`Star ${i + 1} positioned at:`, {x, y});
+          console.log(`Star ${i + 1} initial velocity:`, {x: (Math.random() - 0.5) * 3, y: 2 + Math.random() * 2});
+        }
+      });
+    };
+    dropFromTop(allFallingShapes);
+
+    // Force stars to have stronger initial movement
+    [skewer, star1, star2, star3, star4, star5].forEach((star, i) => {
+      Body.setVelocity(star, {x: 0, y: 5}); // Strong downward velocity
+      console.log(`Star ${i + 1} forced velocity:`, star.velocity);
+    });
+
+    // Debug: Log all bodies in the world
+    console.log('All falling shapes:', allFallingShapes);
+    console.log('Stars created:', [star1, star2, star3, star4, star5]);
+
+    // Add boundaries (no ceiling so bodies can enter from above)
+    const floor = Bodies.rectangle(width / 2, height - 20, width, 40, {isStatic: true, render: {visible: false}});
+    const leftWall = Bodies.rectangle(20, height / 2, 40, height, {isStatic: true, render: {visible: false}});
+    const rightWall = Bodies.rectangle(width - 20, height / 2, 40, height, {isStatic: true, render: {visible: false}});
+
     // Add all bodies to world
     Composite.add(world, [
+      floor, leftWall, rightWall,
       leftMartini,
       rightMartini,
-      briefCrewText,
+
+      //  briefCrewText,
+      ...allFallingShapes,
     ]);
+
+    // Debug: Check if stars are actually in the world
+    console.log('World bodies count:', world.bodies.length);
+    console.log('Stars in world:', world.bodies.filter(b => {
+      const data = shapeData.get(b);
+      return data?.type === 'star';
+    }));
+
+    // Debug: Check star properties
+    [star1, star2, star3, star4, star5].forEach((star, i) => {
+      console.log(`Star ${i + 1} properties:`, {
+        isStatic: star.isStatic,
+        position: star.position,
+        velocity: star.velocity,
+        mass: star.mass,
+        inverseMass: star.inverseMass
+      });
+
+      // Force stars to be non-static and give them mass
+      if (star.isStatic) {
+        console.log(`Warning: Star ${i + 1} is static!`);
+        Body.setStatic(star, false);
+      }
+    });
 
     // mouse drag
     const mouse = Mouse.create(render.canvas);
     const mouseConstraint = MouseConstraint.create(engine, {
       mouse,
-      constraint: { stiffness: 0.25, render: { visible: false } },
+      constraint: {stiffness: 0.25, render: {visible: false}},
     });
     Composite.add(world, mouseConstraint);
+
+    // Add collision detection for debugging
+    Matter.Events.on(engine, 'collisionStart', (event) => {
+      const pairs = event.pairs;
+      pairs.forEach((pair) => {
+        const bodyA = pair.bodyA;
+        const bodyB = pair.bodyB;
+
+        /*/ Check if collision involves a martini glass
+        const leftGlassData = shapeData.get(leftMartini);
+        const rightGlassData = shapeData.get(rightMartini);
+
+        if ((bodyA === leftMartini || bodyB === leftMartini) ||
+          (bodyA === rightMartini || bodyB === rightMartini)) {
+          console.log('Collision with martini glass detected!', {bodyA, bodyB});
+        }
+          */
+      });
+    });
+
+    // Add respawn system for objects that fall off screen
+    Matter.Events.on(engine, 'afterUpdate', () => {
+      allFallingShapes.forEach((body) => {
+        // If object falls below the screen, respawn it at the top
+        if (body.position.y > height + 100) {
+          const x = Math.random() * width;
+          const y = -50 - Math.random() * 100;
+
+          Body.setPosition(body, {x, y});
+          Body.setVelocity(body, {
+            x: (Math.random() - 0.5) * 2,
+            y: 1 + Math.random() * 2
+          });
+          Body.setAngularVelocity(body, (Math.random() - 0.5) * 0.05);
+        }
+      });
+    });
+
+    // Debug: Force stars to move every few frames
+    let frameCount = 0;
+    Matter.Events.on(engine, 'afterUpdate', () => {
+      frameCount++;
+      if (frameCount % 60 === 0) { // Every 60 frames (about 1 second)
+        [star1, star2, star3, star4, star5].forEach((star, i) => {
+          if (star.isStatic) {
+            console.log(`Forcing star ${i + 1} to be non-static`);
+            Body.setStatic(star, false);
+          }
+          // Give stars a small push to ensure they're moving
+          Body.setVelocity(star, {
+            x: star.velocity.x + (Math.random() - 0.5) * 0.1,
+            y: star.velocity.y + 0.1
+          });
+        });
+
+        // Debug test star
+        console.log('Test star position:', testStar.position);
+        console.log('Test star velocity:', testStar.velocity);
+        console.log('Test star isStatic:', testStar.isStatic);
+      }
+    });
+
+    // Add interactive hover effects
+    let hoveredBody: Body | null = null;
+    Matter.Events.on(mouse, 'mousemove', (event: any) => {
+      const mousePosition = event.mouse.position;
+
+      // Check which body is being hovered
+      allFallingShapes.forEach((body) => {
+        const distance = Math.sqrt(
+          Math.pow(body.position.x - mousePosition.x, 2) +
+          Math.pow(body.position.y - mousePosition.y, 2)
+        );
+
+        if (distance < 50) {
+          hoveredBody = body;
+          // Add a subtle bounce effect when hovering
+          Body.setVelocity(body, {
+            x: body.velocity.x * 1.1,
+            y: body.velocity.y * 1.1
+          });
+        }
+      });
+    });
 
     // let wheel/touch scroll the page
     const m: any = mouse;
@@ -149,6 +397,32 @@ export default function Scene() {
       // Render martini glasses
       renderMartiniGlass(ctx, leftMartini, shapeData);
       renderMartiniGlass(ctx, rightMartini, shapeData);
+      /*
+            // Render all falling shapes
+            renderCogwheel(ctx, cogwheel1, shapeData);
+            renderCogwheel(ctx, cogwheel2, shapeData);
+            */
+      renderOliveStick(ctx, skewer, shapeData);
+
+      renderStar(ctx, star1, shapeData);
+      renderStar(ctx, star2, shapeData);
+      renderStar(ctx, star3, shapeData);
+      renderStar(ctx, star4, shapeData);
+      renderStar(ctx, star5, shapeData);
+      renderVLabel(ctx, vlabel, shapeData);
+      renderBurst(ctx, burst, shapeData);
+
+      // Render test star
+      const testStarData = shapeData.get(testStar);
+      if (testStarData?.type === "testStar") {
+        ctx.save();
+        ctx.fillStyle = testStarData.options.fillColor;
+        ctx.beginPath();
+        ctx.arc(testStar.position.x, testStar.position.y, 15, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+
     });
 
     return () => {
@@ -159,17 +433,37 @@ export default function Scene() {
       render.canvas.remove();
       (render as any).textures = {};
     };
-  }, [dimensions]);
+  }, [dimensions, showCollisionBodies]);
 
   return (
-    <div
-      ref={containerRef}
-      style={{
-        width: "100%",
-        height: `${dimensions.height}px`,
-        margin: "0 auto",
-        border: "0px solid #eee",
-      }}
-    />
+    <div style={{position: "relative"}}>
+      <div
+        ref={containerRef}
+        style={{
+          width: "100%",
+          height: `${dimensions.height}px`,
+          margin: "0 auto",
+          border: "0px solid #eee",
+        }}
+      />
+      <button
+        onClick={() => setShowCollisionBodies(!showCollisionBodies)}
+        style={{
+          position: "absolute",
+          top: "10px",
+          right: "10px",
+          padding: "8px 12px",
+          backgroundColor: showCollisionBodies ? "#ef4444" : "#10b981",
+          color: "white",
+          border: "none",
+          borderRadius: "4px",
+          cursor: "pointer",
+          fontSize: "12px",
+          zIndex: 1000,
+        }}
+      >
+        {showCollisionBodies ? "Hide" : "Show"} Collision Bodies
+      </button>
+    </div>
   );
 }

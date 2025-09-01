@@ -2,7 +2,7 @@ import { Bodies, Body } from "matter-js";
 
 /** Shared store shape -> metadata */
 export type ShapeStore = Map<Body, any>;
-const common = (isStatic: boolean) =>
+export const common = (isStatic: boolean) =>
   ({ restitution: 0.4, friction: 0.4, isStatic, render: { visible: false } });
 
 /**

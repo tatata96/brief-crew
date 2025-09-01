@@ -88,10 +88,7 @@ function App() {
           <Landing />
         </section>
         
-        <section id="about" className="section about-section">
-          <About />
-        </section>
-        
+
         <section id="work" className="section work-section">
           <Work />
         </section>
