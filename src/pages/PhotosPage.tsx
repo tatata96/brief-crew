@@ -19,11 +19,6 @@ function PhotosPage() {
 
   return (
     <div className="photos-page">
-      <div className="page-header">
-        <h2>All Photos</h2>
-        <p className="photo-count">{photos.length} photos</p>
-      </div>
-      
       <div className="photos-grid">
         {photos.map((photo) => (
           <div key={photo.id} className="photo-item">
