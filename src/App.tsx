@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import Header from './components/Header'
 import PhotosPage from './pages/PhotosPage'
-import AlbumsPage from './pages/AlbumsPage'
+import UploadPhotosPage from './pages/UploadPhotosPage'
 import FaceUploadPage from './pages/FaceUploadPage'
 import './App.css'
 
@@ -13,7 +13,7 @@ function App() {
       case 'face-recognition':
         return <FaceUploadPage />
       case 'upload-photos':
-        return <AlbumsPage />
+        return <UploadPhotosPage />
       case 'see-photos':
         return <PhotosPage />
       default:

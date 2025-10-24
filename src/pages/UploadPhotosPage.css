@@ -1,0 +1,112 @@
+.upload-photos-page {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 2rem;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.upload-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 1.75rem;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+}
+
+.upload-card h1 {
+  margin: 0 0 0.5rem 0;
+  font-size: 2rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.upload-card p {
+  margin: 0;
+  color: #475569;
+  font-size: 1rem;
+}
+
+.upload-button {
+  background: #2563eb;
+  border: none;
+  border-radius: 999px;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 0.85rem 1.75rem;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.upload-button:hover {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+.upload-button:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.3);
+  outline-offset: 2px;
+}
+
+.file-input {
+  display: none;
+}
+
+.selected-photos h2 {
+  margin: 0 0 0.75rem 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.placeholder {
+  margin: 0;
+  color: #94a3b8;
+}
+
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 1rem;
+}
+
+.photo-thumbnail {
+  position: relative;
+  margin: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  aspect-ratio: 1;
+}
+
+.photo-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media (max-width: 768px) {
+  .upload-photos-page {
+    padding: 1.25rem;
+  }
+
+  .upload-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .upload-card h1 {
+    font-size: 1.75rem;
+  }
+
+  .upload-button {
+    width: 100%;
+    text-align: center;
+  }
+}
