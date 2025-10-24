@@ -2,6 +2,13 @@
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
+## Accessing the dev server from another device
+
+1. Ensure your laptop and mobile device are on the same Wi‑Fi network.
+2. Find your laptop's LAN IP (for example, `ipconfig getifaddr en0` on macOS might return `192.168.1.155`).
+3. Start the dev server: `npm run dev`.
+4. Visit `http://<your-laptop-ip>:5173/` from the mobile device.
+
 Currently, two official plugins are available:
 
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
