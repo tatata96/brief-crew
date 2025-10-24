@@ -2,6 +2,7 @@ import { useState } from 'react'
 import Header from './components/Header'
 import PhotosPage from './pages/PhotosPage'
 import AlbumsPage from './pages/AlbumsPage'
+import FaceUploadPage from './pages/FaceUploadPage'
 import './App.css'
 
 function App() {
@@ -10,7 +11,7 @@ function App() {
   function renderCurrentPage() {
     switch (currentPage) {
       case 'face-recognition':
-        return <PhotosPage />
+        return <FaceUploadPage />
       case 'upload-photos':
         return <AlbumsPage />
       case 'see-photos':

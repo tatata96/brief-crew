@@ -53,7 +53,6 @@ function Header({ onPageChange, currentPage }: HeaderProps) {
                   onClick={() => handleMenuItemClick(item.id)}
                 >
                   <span className="menu-item-label">{item.label}</span>
-                  <span className="menu-item-count">{item.count}</span>
                 </button>
               ))}
             </div>
